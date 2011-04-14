@@ -41,5 +41,7 @@
 
 -(void)addLoadingLayer;
 -(void)animateScanner;
+-(void)loadInfoScreen;
+-(void)addButtons;
 
 @end

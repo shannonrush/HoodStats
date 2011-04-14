@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C37D38881357131000239810 /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = C37D38861357131000239810 /* info.png */; };
+		C37D38891357131000239810 /* info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C37D38871357131000239810 /* info@2x.png */; };
+		C37D388E135716E000239810 /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C37D388C135716E000239810 /* InfoViewController.m */; };
+		C37D388F135716E000239810 /* InfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C37D388D135716E000239810 /* InfoViewController.xib */; };
 		C3AED30813562D3400ECA9C0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3AED30713562D3400ECA9C0 /* UIKit.framework */; };
 		C3AED30A13562D3400ECA9C0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3AED30913562D3400ECA9C0 /* Foundation.framework */; };
 		C3AED30C13562D3400ECA9C0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3AED30B13562D3400ECA9C0 /* CoreGraphics.framework */; };
@@ -37,6 +41,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C37D38861357131000239810 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
+		C37D38871357131000239810 /* info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info@2x.png"; sourceTree = "<group>"; };
+		C37D388B135716E000239810 /* InfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoViewController.h; sourceTree = "<group>"; };
+		C37D388C135716E000239810 /* InfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoViewController.m; sourceTree = "<group>"; };
+		C37D388D135716E000239810 /* InfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InfoViewController.xib; sourceTree = "<group>"; };
 		C3AED30313562D3400ECA9C0 /* HoodStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HoodStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3AED30713562D3400ECA9C0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C3AED30913562D3400ECA9C0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -140,6 +149,8 @@
 				C3AED33B13566E7D00ECA9C0 /* BaseController.m */,
 				C3AED33D13566F4000ECA9C0 /* HoodStatsViewController.h */,
 				C3AED33E13566F4000ECA9C0 /* HoodStatsViewController.m */,
+				C37D388B135716E000239810 /* InfoViewController.h */,
+				C37D388C135716E000239810 /* InfoViewController.m */,
 				C3AED31013562D3400ECA9C0 /* Supporting Files */,
 			);
 			path = HoodStats;
@@ -182,8 +193,9 @@
 		C3AED34213566F4D00ECA9C0 /* XIB */ = {
 			isa = PBXGroup;
 			children = (
-				C3AED33F13566F4000ECA9C0 /* HoodStatsViewController.xib */,
 				C3AED31B13562D3400ECA9C0 /* MainWindow.xib */,
+				C3AED33F13566F4000ECA9C0 /* HoodStatsViewController.xib */,
+				C37D388D135716E000239810 /* InfoViewController.xib */,
 			);
 			name = XIB;
 			sourceTree = "<group>";
@@ -191,6 +203,8 @@
 		C3AED3431356705300ECA9C0 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				C37D38861357131000239810 /* info.png */,
+				C37D38871357131000239810 /* info@2x.png */,
 				C3AED3441356706900ECA9C0 /* bubble.png */,
 				C3AED3451356706900ECA9C0 /* bubble@2x.png */,
 				C3AED3461356706900ECA9C0 /* loading.png */,
@@ -260,6 +274,9 @@
 				C3AED34D1356706900ECA9C0 /* loading@2x.png in Resources */,
 				C3AED34E1356706900ECA9C0 /* scanning.png in Resources */,
 				C3AED34F1356706900ECA9C0 /* scanning@2x.png in Resources */,
+				C37D38881357131000239810 /* info.png in Resources */,
+				C37D38891357131000239810 /* info@2x.png in Resources */,
+				C37D388F135716E000239810 /* InfoViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +298,7 @@
 				C3AED33813562E8000ECA9C0 /* CXMLNode.m in Sources */,
 				C3AED33C13566E7D00ECA9C0 /* BaseController.m in Sources */,
 				C3AED34013566F4000ECA9C0 /* HoodStatsViewController.m in Sources */,
+				C37D388E135716E000239810 /* InfoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,6 +407,7 @@
 				C3AED32513562D3400ECA9C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

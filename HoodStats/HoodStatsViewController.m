@@ -7,6 +7,7 @@
 //
 
 #import "HoodStatsViewController.h"
+#import "InfoViewController.h"
 
 @implementation HoodStatsViewController
 
@@ -79,18 +80,27 @@
         CGRect newFrame = scanningImage.frame;
         newFrame.origin.y += 350.0;
         scanningImage.frame = newFrame;
-        
     }
                      completion:^ (BOOL finished) {
-                         [scanningImage removeFromSuperview];
                          if (finished) {
+                             [scanningImage removeFromSuperview];
                              if ([data count]==0) {
                                  sleep(0.01);
                              }
                              [self performSelector:@selector(addOverlay) withObject:nil afterDelay:0.01];
+                             [self performSelector:@selector(addButtons) withObject:nil afterDelay:0.01];
                              [loadingImage removeFromSuperview];
                          }
                      }];
+}
+
+-(void)addButtons {
+    UIImage *infoImage = [UIImage imageNamed:@"info.png"];
+    UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [infoButton setBackgroundImage:infoImage forState:UIControlStateNormal];
+    infoButton.frame = CGRectMake(265, 395, 45, 45);
+    [infoButton addTarget:self action:@selector(loadInfoScreen) forControlEvents:UIControlEventTouchUpInside];
+    [[self view] addSubview:infoButton];
 }
 
 - (void)addOverlay {
@@ -174,6 +184,13 @@
             markerView.transform = CGAffineTransformMakeRotation(angle);
         }
     }
+}
+
+-(void)loadInfoScreen {
+    InfoViewController *info = [[InfoViewController alloc]initWithNibName:@"InfoViewController" bundle:[NSBundle mainBundle]];
+    info.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self presentModalViewController:info animated:YES];
+    [info release];
 }
 
 #pragma mark UIAccelerometerDelegate

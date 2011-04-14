@@ -15,6 +15,7 @@
 }
 
 -(NSMutableArray *)getData:(CLLocation *)newLocation;
--(NSDictionary *)location:(NSString *)city withState:(NSString *)state;
+-(NSManagedObject *)location:(NSString *)city withState:(NSString *)state;
+-(void)addHistoryItem:(NSString *)label withValue:(NSString *)value withLocation:(NSManagedObject *)location;
 
 @end

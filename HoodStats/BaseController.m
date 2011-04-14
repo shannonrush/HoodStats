@@ -69,6 +69,11 @@
     NSString *medianAge = [[[xml nodesForXPath:@"//attribute[name='Median Age']/values/city/value" error:nil]objectAtIndex:0]stringValue];
     [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:medianAge,@"value",@"Average Age",@"label",nil]];
     
+    for (NSDictionary *item in data) {
+        if ([[item allKeys]containsObject:@"value"]) 
+            [self addHistoryItem:[item objectForKey:@"label"] withValue:[item objectForKey:@"value"] withLocation:location];
+    }
+    
     //TODO: Finish gathering data
     NSMutableArray *returnData = [NSMutableArray arrayWithArray:data];
     [data release];
@@ -100,6 +105,20 @@
             return;
         }
         return locationObject;
+    }
+}
+
+-(void)addHistoryItem:(NSString *)label withValue:(NSString *)value withLocation:(NSManagedObject *)location {
+    HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSManagedObject *itemObject = [NSEntityDescription insertNewObjectForEntityForName:@"HistoryItem" inManagedObjectContext:context];
+    [itemObject setValue:value forKey:@"value"];
+    [itemObject setValue:label forKey:@"label"];
+    [itemObject setValue:location forKey:@"location"];
+    NSError *error;
+    if (![context save:&error]) {
+        NSLog(@"Couldn't save: %@", [error localizedDescription]);
+        return;
     }
 }
 
