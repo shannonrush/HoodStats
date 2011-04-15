@@ -101,6 +101,13 @@
     infoButton.frame = CGRectMake(265, 395, 45, 45);
     [infoButton addTarget:self action:@selector(loadInfoScreen) forControlEvents:UIControlEventTouchUpInside];
     [[self view] addSubview:infoButton];
+    
+    UIImage *cameraImage = [UIImage imageNamed:@"camera.png"];
+    UIButton *cameraButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [cameraButton setBackgroundImage:cameraImage forState:UIControlStateNormal];
+    cameraButton.frame = CGRectMake(15, 395, 45, 45);
+    [cameraButton addTarget:self action:@selector(takePhoto) forControlEvents:UIControlEventTouchUpInside];
+    [[self view] addSubview:cameraButton];
 }
 
 - (void)addOverlay {
@@ -191,6 +198,10 @@
     info.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     [self presentModalViewController:info animated:YES];
     [info release];
+}
+
+-(void)takePhoto {
+
 }
 
 #pragma mark UIAccelerometerDelegate

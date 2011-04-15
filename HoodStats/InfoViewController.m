@@ -45,6 +45,7 @@
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"label" ascending:YES];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     NSArray *historyItems = [[location valueForKeyPath:@"HistoryItems"] sortedArrayUsingDescriptors:sortDescriptors];
+    [sortDescriptor release];
     NSManagedObject *item = [historyItems objectAtIndex:indexPath.row];
     cell.textLabel.text = [item valueForKey:@"label"];
     cell.detailTextLabel.text = [item valueForKey:@"value"];

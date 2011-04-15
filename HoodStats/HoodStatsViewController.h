@@ -43,5 +43,6 @@
 -(void)animateScanner;
 -(void)loadInfoScreen;
 -(void)addButtons;
+-(void)takePhoto;
 
 @end

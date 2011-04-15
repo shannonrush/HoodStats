@@ -183,7 +183,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>126</integer>
+					<integer>117</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -394,7 +394,7 @@
 				<integer>36</integer>
 			</dict>
 		</dict>
-		<string>BaseController.m</string>
+		<string>HoodStatsViewController.m</string>
 		<dict>
 			<key>$classes</key>
 			<array>
@@ -464,7 +464,7 @@
 				<integer>46</integer>
 			</dict>
 			<key>NS.string</key>
-			<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/BaseController.m</string>
+			<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/HoodStatsViewController.m</string>
 		</dict>
 		<dict>
 			<key>$classes</key>
@@ -1207,11 +1207,11 @@
 		<string>PrimaryDocumentVisibleCharacterRange</string>
 		<string>HideAllIssues</string>
 		<string>PrimaryDocumentSelectedCharacterRange</string>
-		<real>324529580.62322098</real>
-		<string>{5889, 1747}</string>
+		<real>324586283.94363201</real>
+		<string>{7896, 1162}</string>
 		<false/>
-		<string>{6877, 0}</string>
-		<string>-location:withState:</string>
+		<string>{8454, 0}</string>
+		<string>-takePhoto</string>
 		<string>Xcode.IDEKit.EditorDocument.SourceCode</string>
 		<dict>
 			<key>$class</key>
@@ -1230,7 +1230,7 @@
 				<integer>122</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/BaseController.m</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/HoodStatsViewController.m</string>
 		<dict>
 			<key>$classes</key>
 			<array>
@@ -1254,7 +1254,7 @@
 				</dict>
 			</array>
 		</dict>
-		<string>{{0, 0}, {920, 508}}</string>
+		<string>{{0, 0}, {1180, 508}}</string>
 		<true/>
 		<dict>
 			<key>$class</key>
@@ -1505,7 +1505,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>147</integer>
+					<integer>145</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -2090,7 +2090,7 @@
 				</dict>
 			</array>
 		</dict>
-		<real>920</real>
+		<real>1180</real>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -2122,7 +2122,7 @@
 		</dict>
 		<string>IDEUtilitiesArea</string>
 		<real>260</real>
-		<string>BaseController.m</string>
+		<string>HoodStatsViewController.m</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -4283,9 +4283,9 @@
 				</dict>
 			</array>
 		</dict>
-		<real>324529580.62197697</real>
+		<real>324584781.04586297</real>
 		<string>{5889, 1747}</string>
-		<string>{6877, 0}</string>
+		<string>{6931, 0}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -4430,9 +4430,9 @@
 				</dict>
 			</array>
 		</dict>
-		<real>324529196.92619699</real>
-		<string>{8829, 809}</string>
-		<string>{8891, 0}</string>
+		<real>324586283.94303101</real>
+		<string>{7896, 1162}</string>
+		<string>{8454, 0}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -4600,9 +4600,9 @@
 				</dict>
 			</array>
 		</dict>
-		<real>324529040.76339197</real>
-		<string>{1340, 1701}</string>
-		<string>{1728, 118}</string>
+		<real>324586156.46384799</real>
+		<string>{288, 1781}</string>
+		<string>{1875, 0}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -4756,19 +4756,19 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>400</integer>
+					<integer>111</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>401</integer>
+					<integer>112</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>402</integer>
+					<integer>113</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>403</integer>
+					<integer>114</integer>
 				</dict>
 			</array>
 			<key>NS.objects</key>
@@ -4791,9 +4791,9 @@
 				</dict>
 			</array>
 		</dict>
-		<real>324519555.34427202</real>
-		<string>{0, 1222}</string>
-		<string>{1215, 0}</string>
+		<real>324586267.62703001</real>
+		<string>{245, 995}</string>
+		<string>{478, 0}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -5510,7 +5510,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>514</integer>
+					<integer>39</integer>
 				</dict>
 			</array>
 		</dict>
@@ -5774,7 +5774,7 @@
 				<integer>531</integer>
 			</dict>
 			<key>NS.time</key>
-			<real>324529546.16873801</real>
+			<real>324586189.87895399</real>
 		</dict>
 		<dict>
 			<key>$classes</key>
@@ -5785,7 +5785,7 @@
 			<key>$classname</key>
 			<string>NSDate</string>
 		</dict>
-		<string>Today at 9:05 PM</string>
+		<string>Today at 12:49 PM</string>
 		<integer>106</integer>
 		<dict>
 			<key>$class</key>
@@ -5829,7 +5829,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>550</integer>
+					<integer>551</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -5854,7 +5854,7 @@
 				<integer>536</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/BaseController.m</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/HoodStatsViewController.m</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -5872,7 +5872,7 @@
 				<integer>538</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/HoodStatsViewController.m</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/HoodStatsViewController.h</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -5908,7 +5908,7 @@
 				<integer>542</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/InfoViewController.h</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/InfoViewController.xib</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -5926,7 +5926,7 @@
 				<integer>544</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/InfoViewController.xib</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/BaseController.m</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -5944,7 +5944,7 @@
 				<integer>546</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/main.m</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/InfoViewController.h</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -5960,6 +5960,24 @@
 			<dict>
 				<key>CF$UID</key>
 				<integer>548</integer>
+			</dict>
+		</dict>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/main.m</string>
+		<dict>
+			<key>$class</key>
+			<dict>
+				<key>CF$UID</key>
+				<integer>123</integer>
+			</dict>
+			<key>NS.base</key>
+			<dict>
+				<key>CF$UID</key>
+				<integer>0</integer>
+			</dict>
+			<key>NS.relative</key>
+			<dict>
+				<key>CF$UID</key>
+				<integer>550</integer>
 			</dict>
 		</dict>
 		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/HoodStatsAppDelegate.m</string>
@@ -5980,24 +5998,6 @@
 				<integer>253</integer>
 			</dict>
 		</dict>
-		<dict>
-			<key>$class</key>
-			<dict>
-				<key>CF$UID</key>
-				<integer>123</integer>
-			</dict>
-			<key>NS.base</key>
-			<dict>
-				<key>CF$UID</key>
-				<integer>0</integer>
-			</dict>
-			<key>NS.relative</key>
-			<dict>
-				<key>CF$UID</key>
-				<integer>551</integer>
-			</dict>
-		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/HoodStatsViewController.h</string>
 		<dict>
 			<key>$class</key>
 			<dict>
