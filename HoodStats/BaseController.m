@@ -99,6 +99,7 @@
                                            inManagedObjectContext:context];
         [locationObject setValue:city forKey:@"city"];
         [locationObject setValue:state forKey:@"state"];
+        [locationObject setValue:[NSDate date] forKey:@"timestamp"];
         NSError *error;
         if (![context save:&error]) {
             NSLog(@"Couldn't save: %@", [error localizedDescription]);
