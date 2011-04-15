@@ -21,6 +21,16 @@
     NSString *locState = [[[locXML nodesForXPath:@"/GeocodeResponse/result[1]/address_component[type/text()='administrative_area_level_1']/short_name"error:nil]objectAtIndex:0]stringValue];
     NSManagedObject *location = [self location:locCity withState:locState];
     
+    // remove existing historyItems for location if any
+    NSSet *historyItems = [location valueForKeyPath:@"HistoryItems"];
+    if ([historyItems count]>0) {
+        HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        NSManagedObjectContext *context = [appDelegate managedObjectContext];
+        for (NSManagedObject *item in historyItems) {
+            [context deleteObject:item];
+        }
+    }
+    
     // get data from Zillow
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.zillow.com/webservice/GetDemographics.htm?zws-id=X1-ZWz1bvq9sepl3f_90hcq&city=%@&state=%@",locCity,locState]];
     CXMLDocument *xml = [[[CXMLDocument alloc] initWithContentsOfURL:url options:0 error:nil] autorelease];

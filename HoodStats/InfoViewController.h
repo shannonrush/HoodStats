@@ -16,4 +16,6 @@
 
 -(NSArray *)locations;
 
+-(IBAction)loadMainScreen;
+
 @end

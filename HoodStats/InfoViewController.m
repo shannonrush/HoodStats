@@ -72,6 +72,12 @@
     return objects;
 }
 
+#pragma mark navigation
+
+-(IBAction)loadMainScreen {
+    [self.parentViewController dismissModalViewControllerAnimated: YES];
+}
+
 
 #pragma mark memory management
 

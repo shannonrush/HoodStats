@@ -215,7 +215,6 @@
 	didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation {
     [self setCurrentLocation:newLocation];
-    NSLog(@"%i",[data count]);
     if ([data count]==0) {
         [data setArray:[self getData:newLocation]];
     }
@@ -234,10 +233,6 @@
 - (void)viewDidUnload {
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
-    [[UIAccelerometer sharedAccelerometer] setDelegate:nil];
-    [locationManager stopUpdatingHeading]; 
-	[locationManager stopUpdatingLocation]; 
-	[locationManager setDelegate:nil];
 }
 
 
