@@ -18,11 +18,12 @@
 
 
 @interface BaseController : UIViewController {
-    
+    NSManagedObject *location;
 }
 
 -(NSMutableArray *)getData:(CLLocation *)newLocation;
 -(NSManagedObject *)location:(NSString *)city withState:(NSString *)state;
--(void)addHistoryItem:(NSString *)label withValue:(NSString *)value withLocation:(NSManagedObject *)location;
+-(void)addHistoryItem:(NSString *)label withValue:(NSString *)value;
+-(void)savePhoto:(UIImage *)screenshot;
 
 @end

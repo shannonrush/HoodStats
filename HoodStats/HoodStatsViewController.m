@@ -258,6 +258,8 @@
                           
              UIGraphicsEndImageContext();
              
+             [self savePhoto:screenshotImage];
+             
              ALAssetsLibrary *library			= [[ALAssetsLibrary alloc] init];
              
              [library writeImageToSavedPhotosAlbum:[screenshot CGImage]

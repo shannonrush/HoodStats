@@ -20,7 +20,7 @@
     NSLog(@"%@",locXML);
     NSString *locCity = [[[locXML nodesForXPath:@"/GeocodeResponse/result[1]/address_component[type/text()='locality']/long_name"error:nil]objectAtIndex:0]stringValue];
     NSString *locState = [[[locXML nodesForXPath:@"/GeocodeResponse/result[1]/address_component[type/text()='administrative_area_level_1']/short_name"error:nil]objectAtIndex:0]stringValue];
-    NSManagedObject *location = [self location:locCity withState:locState];
+    location = [self location:locCity withState:locState];
     
     // remove existing historyItems for location if any
     NSSet *historyItems = [location valueForKeyPath:@"HistoryItems"];
@@ -82,7 +82,7 @@
     
     for (NSDictionary *item in data) {
         if ([[item allKeys]containsObject:@"value"]) 
-            [self addHistoryItem:[item objectForKey:@"label"] withValue:[item objectForKey:@"value"] withLocation:location];
+            [self addHistoryItem:[item objectForKey:@"label"] withValue:[item objectForKey:@"value"]];
     }
     
     //TODO: Finish gathering data
@@ -120,7 +120,7 @@
     }
 }
 
--(void)addHistoryItem:(NSString *)label withValue:(NSString *)value withLocation:(NSManagedObject *)location {
+-(void)addHistoryItem:(NSString *)label withValue:(NSString *)value {
     HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
     NSManagedObject *itemObject = [NSEntityDescription insertNewObjectForEntityForName:@"HistoryItem" inManagedObjectContext:context];
@@ -134,40 +134,18 @@
     }
 }
 
-- (UIImage *) imageFromSampleBuffer:(CMSampleBufferRef) sampleBuffer {
-    // Get a CMSampleBuffer's Core Video image buffer for the media data
-    CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer); 
-    // Lock the base address of the pixel buffer
-    CVPixelBufferLockBaseAddress(imageBuffer, 0); 
-    
-    // Get the number of bytes per row for the pixel buffer
-    void *baseAddress = CVPixelBufferGetBaseAddress(imageBuffer); 
-    
-    // Get the number of bytes per row for the pixel buffer
-    size_t bytesPerRow = CVPixelBufferGetBytesPerRow(imageBuffer); 
-    // Get the pixel buffer width and height
-    size_t width = CVPixelBufferGetWidth(imageBuffer); 
-    size_t height = CVPixelBufferGetHeight(imageBuffer); 
-    
-    // Create a device-dependent RGB color space
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB(); 
-    
-    // Create a bitmap graphics context with the sample buffer data
-    CGContextRef context = CGBitmapContextCreate(baseAddress, width, height, 8, 
-                                                 bytesPerRow, colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst); 
-    // Create a Quartz image from the pixel data in the bitmap graphics context
-    CGImageRef quartzImage = CGBitmapContextCreateImage(context); 
-    // Unlock the pixel buffer
-    CVPixelBufferUnlockBaseAddress(imageBuffer,0);
-    
-    CGContextRelease(context); 
-    CGColorSpaceRelease(colorSpace);
-    
-    UIImage *image = [UIImage imageWithCGImage:quartzImage];
-    
-    CGImageRelease(quartzImage);
-    
-    return (image);
+-(void)savePhoto:(UIImage *)screenshot {
+    HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSManagedObject *photoObject = [NSEntityDescription insertNewObjectForEntityForName:@"Photo" inManagedObjectContext:context];
+    [photoObject setValue:screenshot forKey:@"file"];
+    [photoObject setValue:location forKey:@"location"];
+    [photoObject setValue:[NSDate date] forKey:@"timestamp"];
+    NSError *error;
+    if (![context save:&error]) {
+        NSLog(@"Couldn't save: %@", [error localizedDescription]);
+        return;
+    }
 }
 
 

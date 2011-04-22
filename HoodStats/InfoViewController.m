@@ -23,14 +23,14 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    NSManagedObject *location = [locations objectAtIndex:section];
-    NSString *header = [NSString stringWithFormat:@"%@, %@",[location valueForKey:@"city"],[location valueForKey:@"state"]];
+    NSManagedObject *sectionLocation = [locations objectAtIndex:section];
+    NSString *header = [NSString stringWithFormat:@"%@, %@",[sectionLocation valueForKey:@"city"],[sectionLocation valueForKey:@"state"]];
     return header;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSManagedObject *location = [locations objectAtIndex:section];
-    NSSet *historyItems = [location valueForKeyPath:@"HistoryItems"];
+    NSManagedObject *sectionLocation = [locations objectAtIndex:section];
+    NSSet *historyItems = [sectionLocation valueForKeyPath:@"HistoryItems"];
     return [historyItems count];
 }
 
@@ -41,10 +41,10 @@
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
     }
-    NSManagedObject *location = [locations objectAtIndex:indexPath.section];
+    NSManagedObject *sectionLocation = [locations objectAtIndex:indexPath.section];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"label" ascending:YES];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    NSArray *historyItems = [[location valueForKeyPath:@"HistoryItems"] sortedArrayUsingDescriptors:sortDescriptors];
+    NSArray *historyItems = [[sectionLocation valueForKeyPath:@"HistoryItems"] sortedArrayUsingDescriptors:sortDescriptors];
     [sortDescriptor release];
     NSManagedObject *item = [historyItems objectAtIndex:indexPath.row];
     cell.textLabel.text = [item valueForKey:@"label"];
