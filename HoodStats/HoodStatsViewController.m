@@ -11,41 +11,67 @@
 
 @implementation HoodStatsViewController
 
-@synthesize currentLocation, captureSession, previewLayer;
+@synthesize currentLocation, captureSession, previewLayer, captureOutput, orientation, screenshotImage;
 
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+
     data = [[NSMutableArray alloc]init];
-    NSError *error;
-    AVCaptureDeviceInput *captureInput = [AVCaptureDeviceInput 
-										  deviceInputWithDevice:[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] 
-										  error:&error];
-    if (error) {
-        NSLog(@"We couldn't get a capture Input! (%@)", [error localizedDescription]);
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Important!" 
-														message:@"Unable to find a camera." 
-													   delegate:nil 
-											  cancelButtonTitle:@"Okay" 
-											  otherButtonTitles:nil];
-        [alert show];
-        [alert autorelease];
-        
-    }
-    AVCaptureSession *aCaptureSession = [[AVCaptureSession alloc] init];
-    [aCaptureSession addInput:captureInput];
-    
-    CALayer *layer = [self.view layer];
-    AVCaptureVideoPreviewLayer *aPreviewLayer = [AVCaptureVideoPreviewLayer layerWithSession:aCaptureSession];
-    CGRect frame = [layer frame];
-    frame.origin.x = frame.origin.y = 0;
-    [aPreviewLayer setFrame:frame];
-    [aPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    [layer addSublayer:aPreviewLayer];
-    [self setCaptureSession:aCaptureSession];
-    [self setPreviewLayer:aPreviewLayer];
+    [self initVideo];
     [self addLoadingLayer];
 }
+
+-(void)initVideo {
+    // device
+    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    
+    // auto-focus
+    if ([device isFocusModeSupported:AVCaptureFocusModeAutoFocus]) {
+		NSError *error = nil;
+		if ([device lockForConfiguration:&error]) {
+			device.focusMode					= AVCaptureFocusModeAutoFocus;
+			[device unlockForConfiguration];
+		}
+    }
+	
+    // auto-flash
+	if ([device isFlashModeSupported:AVCaptureFlashModeAuto]) {
+		NSError *error = nil;
+		if ([device lockForConfiguration:&error]) {
+			device.flashMode					= AVCaptureFlashModeAuto;
+			[device unlockForConfiguration];
+		}
+	}	
+    
+    // device input
+    NSError *error;
+    AVCaptureDeviceInput *captureInput = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
+    
+    // device output
+    captureOutput = [[AVCaptureStillImageOutput alloc] init];
+	NSDictionary *outputSettings = [NSDictionary dictionaryWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
+	[captureOutput setOutputSettings:outputSettings];
+	
+    // capture session
+    captureSession = [[AVCaptureSession alloc] init];
+    captureSession.sessionPreset = AVCaptureSessionPreset640x480;
+
+    // add input and output
+    [captureSession addInput:captureInput];
+    [captureSession addOutput:captureOutput];
+
+    CALayer *layer = [self.view layer];
+    previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:captureSession];
+    CGRect frame = [layer frame];
+    frame.origin.x = frame.origin.y = 0;
+    [previewLayer setFrame:frame];
+    [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    [layer addSublayer:previewLayer];
+    [captureSession startRunning];
+    
+}
+
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -201,7 +227,119 @@
 }
 
 -(void)takePhoto {
+    AVCaptureConnection *videoConnection = [self connectionWithMediaType:AVMediaTypeVideo fromConnections:[self.captureOutput connections]];
+    if ([videoConnection isVideoOrientationSupported]) 
+	{
+		[videoConnection setVideoOrientation:[[UIDevice currentDevice] orientation]]; 
+	}
 
+    [self.captureOutput captureStillImageAsynchronouslyFromConnection:videoConnection
+															   completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) 
+     {
+         if (imageDataSampleBuffer != NULL) 
+         {
+             NSData *imageData					= [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
+             UIImage *image						= [[UIImage alloc] initWithData:imageData];
+
+             CGSize imageSize = [[UIScreen mainScreen] bounds].size;
+             UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
+             
+             CGContextRef context				= UIGraphicsGetCurrentContext();
+             UIGraphicsPushContext(context);
+             [image drawInRect:CGRectMake(0, 0, imageSize.width, imageSize.height)];
+             UIGraphicsPopContext();
+             
+             for (UIView *view in overlayGraphicViews) {
+                 [self renderView:view inContext:context];
+             }
+             
+             UIImage *screenshot					= UIGraphicsGetImageFromCurrentImageContext();
+             self.screenshotImage                   = screenshot;
+                          
+             UIGraphicsEndImageContext();
+             
+             ALAssetsLibrary *library			= [[ALAssetsLibrary alloc] init];
+             
+             [library writeImageToSavedPhotosAlbum:[screenshot CGImage]
+                                       orientation:ALAssetOrientationUp
+                                   completionBlock:^(NSURL *assetURL, NSError *error)
+              {
+                  if (error) 
+                  {
+                      if ([self respondsToSelector:@selector(captureStillImageFailedWithError:)]) 
+                      {
+                          [self captureStillImageFailedWithError:error];
+                      }                                                                                               
+                  }
+              }];
+             
+             [library release];
+             
+             [image release];
+         } 
+         else if (error) 
+         {
+             NSLog(@"Oops!");
+             if ([self respondsToSelector:@selector(captureStillImageFailedWithError:)]) 
+             {
+                 [self captureStillImageFailedWithError:error];
+             }
+         }
+     }];
+
+}
+
+- (void)renderView:(UIView*)view inContext:(CGContextRef)context {
+    CGContextSaveGState(context);
+    CGContextTranslateCTM(context, [view center].x, [view center].y);
+    CGContextConcatCTM(context, [view transform]);
+    CGContextTranslateCTM(context,
+                          -[view bounds].size.width * [[view layer] anchorPoint].x,
+                          -[view bounds].size.height * [[view layer] anchorPoint].y);
+    [[view layer] renderInContext:context];
+    CGContextRestoreGState(context);
+}
+
+- (AVCaptureConnection *)connectionWithMediaType:(NSString *)mediaType fromConnections:(NSArray *)connections
+{
+	for ( AVCaptureConnection *connection in connections ) 
+	{
+		for ( AVCaptureInputPort *port in [connection inputPorts] ) 
+		{
+			if ( [[port mediaType] isEqual:mediaType] ) 
+			{
+				return [[connection retain] autorelease];
+			}
+		}
+	}
+	return nil;
+}
+
+#pragma mark -
+#pragma mark Error Handling Methods
+
+- (void) captureStillImageFailedWithError:(NSError *)error
+{
+    UIAlertView *alertView						= [[UIAlertView alloc] initWithTitle:@"Still Image Capture Failure"
+															 message:[error localizedDescription]
+															delegate:nil
+												   cancelButtonTitle:@"Okay"
+												   otherButtonTitles:nil];
+    [alertView show];
+    [alertView release];
+}
+
+
+
+- (void) cannotWriteToAssetLibrary
+{
+    UIAlertView *alertView						= [[UIAlertView alloc] initWithTitle:@"Incompatible with Asset Library"
+															 message:@"The captured file cannot be written to the asset library. It is likely an audio-only file."
+															delegate:nil
+												   cancelButtonTitle:@"Okay"
+												   otherButtonTitles:nil];
+    [alertView show];
+    [alertView release];        
 }
 
 #pragma mark UIAccelerometerDelegate
@@ -254,6 +392,7 @@
 	[locationManager setDelegate:nil];
     
 	[captureSession release];
+    [captureOutput release];
 	[previewLayer release];
     [currentLocation release]; 
     [locationManager release]; 
