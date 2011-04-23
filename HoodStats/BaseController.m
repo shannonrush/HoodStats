@@ -138,7 +138,8 @@
     HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
     NSManagedObject *photoObject = [NSEntityDescription insertNewObjectForEntityForName:@"Photo" inManagedObjectContext:context];
-    [photoObject setValue:screenshot forKey:@"file"];
+    NSData *imageData = UIImagePNGRepresentation(screenshot);
+    [photoObject setValue:imageData forKey:@"image"];
     [photoObject setValue:location forKey:@"location"];
     [photoObject setValue:[NSDate date] forKey:@"timestamp"];
     NSError *error;

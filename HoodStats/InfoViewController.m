@@ -16,6 +16,11 @@
     locations = [[NSArray alloc]initWithArray:[self locations]];
 }
 
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    //[locationTable reloadData];
+}
+
 # pragma mark UITableViewDelegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -31,7 +36,12 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSManagedObject *sectionLocation = [locations objectAtIndex:section];
     NSSet *historyItems = [sectionLocation valueForKeyPath:@"HistoryItems"];
-    return [historyItems count];
+    NSSet *photos = [sectionLocation valueForKey:@"Photos"];
+    if ([photos count]>0) {
+        return [historyItems count]+1;
+    } else {
+        return [historyItems count];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)theTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -42,14 +52,18 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
     }
     NSManagedObject *sectionLocation = [locations objectAtIndex:indexPath.section];
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"label" ascending:YES];
-    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    NSArray *historyItems = [[sectionLocation valueForKeyPath:@"HistoryItems"] sortedArrayUsingDescriptors:sortDescriptors];
-    [sortDescriptor release];
-    NSManagedObject *item = [historyItems objectAtIndex:indexPath.row];
-    cell.textLabel.text = [item valueForKey:@"label"];
-    cell.detailTextLabel.text = [item valueForKey:@"value"];
-    
+    if ([[sectionLocation valueForKey:@"HistoryItems"]count]<=[indexPath row]) {
+        cell.textLabel.text = @"Photos";
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"Your photos taken in %@",[sectionLocation valueForKey:@"city"]];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    } else {
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"label" ascending:YES];
+        NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+        NSArray *historyItems = [[sectionLocation valueForKeyPath:@"HistoryItems"] sortedArrayUsingDescriptors:sortDescriptors];
+        NSManagedObject *item = [historyItems objectAtIndex:[indexPath row]];
+        cell.textLabel.text = [item valueForKey:@"label"];
+        cell.detailTextLabel.text = [item valueForKey:@"value"];
+    }
     return cell;
 }
 

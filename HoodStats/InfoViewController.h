@@ -11,6 +11,7 @@
 
 @interface InfoViewController : BaseController <UITableViewDelegate> {
     NSArray *locations;
+    IBOutlet UITableView *locationTable;
     
 }
 
