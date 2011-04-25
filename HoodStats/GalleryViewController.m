@@ -43,10 +43,26 @@
         NSArray *images = [imageDictionary objectForKey:date];
         for (UIImage *image in images) {
             // make a thumbnail from the image and add it to a button
-            UIImage *thumbnail = [image thumbnailImage:50.0 transparentBorder:1.0 cornerRadius:0 interpolationQuality:kCGInterpolationLow];
+            
+            // crop image to square
+        
+            CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake(0, 0, 640.0, 640.0));
+            UIImage *croppedImage = [UIImage imageWithCGImage:imageRef]; 
+            CGImageRelease(imageRef);
+            
+            // resize to thumbnail
+            
+            CGSize newSize = CGSizeMake(64.0, 64.0);
+            UIGraphicsBeginImageContext(CGSizeMake(newSize.width, newSize.height));
+            [croppedImage drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+            UIImage *thumbnail = UIGraphicsGetImageFromCurrentImageContext();    
+            UIGraphicsEndImageContext();
+            
+            // set button image to thumbnail
+            
             UIButton *imageButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [imageButton setBackgroundImage:thumbnail forState:UIControlStateNormal];
-            imageButton.frame = CGRectMake(10.0, 40.0, 50.0, 50.0);
+            [imageButton setBackgroundImage:croppedImage forState:UIControlStateNormal];
+            imageButton.frame = CGRectMake(10.0, 40.0, thumbnail.size.width, thumbnail.size.height);
             [self.view addSubview:imageButton];
 
         }
