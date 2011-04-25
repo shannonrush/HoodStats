@@ -16,6 +16,8 @@
 		C34355821358C54800895B9C /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C34355801358C54800895B9C /* camera@2x.png */; };
 		C343558C135A196B00895B9C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C343558B135A196B00895B9C /* QuartzCore.framework */; };
 		C343558E135A2FE900895B9C /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C343558D135A2FE900895B9C /* ImageIO.framework */; };
+		C358D3A51363AE3A007B7A7A /* GalleryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C358D3A31363AE3A007B7A7A /* GalleryViewController.m */; };
+		C358D3A61363AE3A007B7A7A /* GalleryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C358D3A41363AE3A007B7A7A /* GalleryViewController.xib */; };
 		C37D38881357131000239810 /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = C37D38861357131000239810 /* info.png */; };
 		C37D38891357131000239810 /* info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C37D38871357131000239810 /* info@2x.png */; };
 		C37D388E135716E000239810 /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C37D388C135716E000239810 /* InfoViewController.m */; };
@@ -60,6 +62,9 @@
 		C34355801358C54800895B9C /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
 		C343558B135A196B00895B9C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		C343558D135A2FE900895B9C /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		C358D3A21363AE3A007B7A7A /* GalleryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GalleryViewController.h; sourceTree = "<group>"; };
+		C358D3A31363AE3A007B7A7A /* GalleryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GalleryViewController.m; sourceTree = "<group>"; };
+		C358D3A41363AE3A007B7A7A /* GalleryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GalleryViewController.xib; sourceTree = "<group>"; };
 		C37D38861357131000239810 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
 		C37D38871357131000239810 /* info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info@2x.png"; sourceTree = "<group>"; };
 		C37D388B135716E000239810 /* InfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoViewController.h; sourceTree = "<group>"; };
@@ -134,7 +139,6 @@
 		C3AED2F813562D3400ECA9C0 = {
 			isa = PBXGroup;
 			children = (
-				C3AED33913562E8800ECA9C0 /* TouchXML */,
 				C3AED30F13562D3400ECA9C0 /* HoodStats */,
 				C3AED30613562D3400ECA9C0 /* Frameworks */,
 				C3AED30413562D3400ECA9C0 /* Products */,
@@ -179,6 +183,9 @@
 				C3AED33E13566F4000ECA9C0 /* HoodStatsViewController.m */,
 				C37D388B135716E000239810 /* InfoViewController.h */,
 				C37D388C135716E000239810 /* InfoViewController.m */,
+				C358D3A21363AE3A007B7A7A /* GalleryViewController.h */,
+				C358D3A31363AE3A007B7A7A /* GalleryViewController.m */,
+				C3AED33913562E8800ECA9C0 /* TouchXML */,
 				C3AED31013562D3400ECA9C0 /* Supporting Files */,
 			);
 			path = HoodStats;
@@ -216,6 +223,7 @@
 				C3AED33213562E8000ECA9C0 /* TouchXML.h */,
 			);
 			name = TouchXML;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		C3AED34213566F4D00ECA9C0 /* XIB */ = {
@@ -224,6 +232,7 @@
 				C3AED31B13562D3400ECA9C0 /* MainWindow.xib */,
 				C3AED33F13566F4000ECA9C0 /* HoodStatsViewController.xib */,
 				C37D388D135716E000239810 /* InfoViewController.xib */,
+				C358D3A41363AE3A007B7A7A /* GalleryViewController.xib */,
 			);
 			name = XIB;
 			sourceTree = "<group>";
@@ -317,6 +326,7 @@
 				C343557E1357DD7300895B9C /* settings@2x.png in Resources */,
 				C34355811358C54800895B9C /* camera.png in Resources */,
 				C34355821358C54800895B9C /* camera@2x.png in Resources */,
+				C358D3A61363AE3A007B7A7A /* GalleryViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +349,7 @@
 				C3AED33C13566E7D00ECA9C0 /* BaseController.m in Sources */,
 				C3AED34013566F4000ECA9C0 /* HoodStatsViewController.m in Sources */,
 				C37D388E135716E000239810 /* InfoViewController.m in Sources */,
+				C358D3A51363AE3A007B7A7A /* GalleryViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

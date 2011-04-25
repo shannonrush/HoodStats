@@ -20,6 +20,7 @@
     data = [[NSMutableArray alloc]init];
     [self initVideo];
     [self addLoadingLayer];
+    dataRetrieved = NO;
 }
 
 -(void)initVideo {
@@ -366,8 +367,9 @@
 	didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation {
     [self setCurrentLocation:newLocation];
-    if ([data count]==0) {
+    if (!dataRetrieved) {
         [data setArray:[self getData:newLocation]];
+        dataRetrieved = YES;
     }
     [self updateUI];
 }

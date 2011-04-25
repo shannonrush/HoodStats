@@ -8,17 +8,13 @@
 
 #import "InfoViewController.h"
 #import "HoodStatsAppDelegate.h"
+#import "GalleryViewController.h"
 
 @implementation InfoViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     locations = [[NSArray alloc]initWithArray:[self locations]];
-}
-
--(void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    //[locationTable reloadData];
 }
 
 # pragma mark UITableViewDelegate
@@ -68,6 +64,13 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([[tableView cellForRowAtIndexPath:indexPath].textLabel.text isEqualToString:@"Photos"]) {
+        // load galleryView
+        GalleryViewController *gallery = [[GalleryViewController alloc]initWithNibName:@"GalleryViewController" bundle:[NSBundle mainBundle]];
+        gallery.selectedLocation = [locations objectAtIndex:[indexPath section]];
+        [self presentModalViewController:gallery animated:YES];
+        [gallery release];
+    }
 }
 
 #pragma mark data collection

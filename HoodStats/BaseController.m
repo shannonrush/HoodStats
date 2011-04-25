@@ -82,7 +82,7 @@
     
     for (NSDictionary *item in data) {
         if ([[item allKeys]containsObject:@"value"]) 
-            [self addHistoryItem:[item objectForKey:@"label"] withValue:[item objectForKey:@"value"]];
+            [self saveHistoryItem:[item objectForKey:@"label"] withValue:[item objectForKey:@"value"]];
     }
     
     //TODO: Finish gathering data
@@ -120,7 +120,7 @@
     }
 }
 
--(void)addHistoryItem:(NSString *)label withValue:(NSString *)value {
+-(void)saveHistoryItem:(NSString *)label withValue:(NSString *)value {
     HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
     NSManagedObject *itemObject = [NSEntityDescription insertNewObjectForEntityForName:@"HistoryItem" inManagedObjectContext:context];

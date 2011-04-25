@@ -27,6 +27,8 @@
     double angleInDeg;
     double vertAngle; //rad
     double vertAngleInDeg;
+    
+    BOOL dataRetrieved;
 }
 
 @property(nonatomic, retain)CLLocation *currentLocation;
