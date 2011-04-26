@@ -12,6 +12,8 @@
 
 @implementation BaseController
 
+@synthesize imageDictionary;
+
 -(NSMutableArray *)getData:(CLLocation *)newLocation {
     
     // Get zip code from lat long for Zillow call
@@ -147,6 +149,72 @@
         NSLog(@"Couldn't save: %@", [error localizedDescription]);
         return;
     }
+}
+
+-(NSArray *)locations {
+    HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Location" inManagedObjectContext:context];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSSortDescriptor *dateSort = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:NO];
+    [request setEntity:entityDesc];
+	[request setSortDescriptors:[NSArray arrayWithObject:dateSort]];
+    NSError *error;
+    NSArray *objects = [context executeFetchRequest:request error:&error];
+    [request release];
+    [dateSort release];
+    return objects;
+}
+
+-(void)initImages {
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+	NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
+	[runLoop run];
+    imageDictionary = [[NSMutableDictionary alloc]init];
+    for (NSManagedObject *selectedLocation in [self locations]) {
+        NSString *locationString = [NSString stringWithFormat:@"%@, %@",[selectedLocation valueForKey:@"city"],[selectedLocation valueForKey:@"state"]];
+        if (![[imageDictionary allKeys]containsObject:locationString]) {
+            [imageDictionary setObject:[NSMutableDictionary dictionary] forKey:locationString];
+        }
+        for (NSManagedObject *photo in [selectedLocation valueForKey:@"Photos"]) {
+            NSDateFormatter*dateFormat =[[NSDateFormatter alloc] init];
+            [dateFormat setDateFormat:@"MMMM e, YYYY"]; // May 8, 1977
+            NSString *dateString = [dateFormat stringFromDate:[photo valueForKey:@"timestamp"]];   
+            [dateFormat release];
+            if (![[[imageDictionary objectForKey:locationString] allKeys]containsObject:dateString]) {
+                [[imageDictionary objectForKey:locationString]setObject:[NSMutableArray array] forKey:dateString];
+            }
+            UIImage *image = [UIImage imageWithData:[photo valueForKey:@"image"]];
+            UIImage *thumbnail = [self thumbnail:image];
+            NSDictionary *photoDictionary = [NSDictionary dictionaryWithObjectsAndKeys:image,@"image",thumbnail,@"thumbnail",nil];
+            [[[imageDictionary objectForKey:locationString]objectForKey:dateString]addObject:photoDictionary];
+        }
+    }
+    [pool release];
+}
+
+-(UIImage *)thumbnail:(UIImage *)image {
+    // make a thumbnail from the image and add it to a button
+    
+    // crop image to square
+    
+    CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake(0, 0, 640.0, 640.0));
+    UIImage *croppedImage = [UIImage imageWithCGImage:imageRef]; 
+    CGImageRelease(imageRef);
+    
+    // resize to thumbnail
+    
+    CGSize newSize = CGSizeMake(64.0, 64.0);
+    UIGraphicsBeginImageContext(CGSizeMake(newSize.width, newSize.height));
+    [croppedImage drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *thumbnail = UIGraphicsGetImageFromCurrentImageContext();    
+    UIGraphicsEndImageContext();
+    return thumbnail;
+}
+
+-(NSDictionary *)locationDictionary:(NSManagedObject *)selectedLocation {
+    NSString *locationString = [NSString stringWithFormat:@"%@, %@",[selectedLocation valueForKey:@"city"],[selectedLocation valueForKey:@"state"]];
+    return [imageDictionary objectForKey:locationString];
 }
 
 

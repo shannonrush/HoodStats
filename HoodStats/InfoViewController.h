@@ -11,10 +11,8 @@
 
 @interface InfoViewController : BaseController <UITableViewDelegate> {
     NSArray *locations;
-    
 }
 
--(NSArray *)locations;
 
 -(IBAction)loadMainScreen;
 

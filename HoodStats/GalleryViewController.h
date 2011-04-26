@@ -11,12 +11,12 @@
 
 @interface GalleryViewController : BaseController {
     NSManagedObject *selectedLocation;
-    NSMutableDictionary *imageDictionary;
 }
 
 @property (nonatomic, retain) NSManagedObject *selectedLocation;
 
--(void)initImages;
+
 -(void)initGallery;
+
 
 @end

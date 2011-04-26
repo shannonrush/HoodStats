@@ -15,59 +15,51 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self initImages];
     [self initGallery];
 }
 
--(void)initImages {
-    imageDictionary = [[NSMutableDictionary alloc]init];
-    for (NSManagedObject *photo in [selectedLocation valueForKey:@"Photos"]) {
-        NSDateFormatter*dateFormat =[[NSDateFormatter alloc] init];
-        [dateFormat setDateFormat:@"MMMM e, YYYY"]; // May 8, 1977
-        NSString *dateString = [dateFormat stringFromDate:[photo valueForKey:@"timestamp"]];   
-        [dateFormat release];
-        if (![[imageDictionary allKeys] containsObject:dateString]) {
-            [imageDictionary setObject:[NSMutableArray array] forKey:dateString];
-        }
-        [[imageDictionary objectForKey:dateString]addObject:[UIImage imageWithData:[photo valueForKey:@"image"]]];
-    }
-}
+
 
 -(void)initGallery {
-    NSArray *dates = [imageDictionary allKeys];
+    float y = 0.0;
+    NSDictionary *locationDictionary = [self locationDictionary:selectedLocation];;
+    NSArray *dates = [locationDictionary allKeys];
     for (NSString *date in dates) {
-        UILabel *dateLabel = [[UILabel alloc]initWithFrame:CGRectMake(0.0, 0.0, 300.0, 30.0)];
+        // add date label
+        float x = 20.0;
+
+        UILabel *dateLabel = [[UILabel alloc]initWithFrame:CGRectMake(x, y, 300.0, 30.0)];
         dateLabel.text = date;
         [self.view addSubview:dateLabel];
         [dateLabel release];
-        NSArray *images = [imageDictionary objectForKey:date];
-        for (UIImage *image in images) {
-            // make a thumbnail from the image and add it to a button
-            
-            // crop image to square
         
-            CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake(0, 0, 640.0, 640.0));
-            UIImage *croppedImage = [UIImage imageWithCGImage:imageRef]; 
-            CGImageRelease(imageRef);
+        y += 35.0;
+        
+        NSArray *images = [locationDictionary objectForKey:date];
+        
+        for (NSDictionary *imageDict in images) {
+            int index = [images indexOfObject:imageDict];
+            if (index > 0 && index % 4 == 0) {
+                // make a new row
+                y += 70.0;
+                x = 20.0;
+            }
             
-            // resize to thumbnail
-            
-            CGSize newSize = CGSizeMake(64.0, 64.0);
-            UIGraphicsBeginImageContext(CGSizeMake(newSize.width, newSize.height));
-            [croppedImage drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
-            UIImage *thumbnail = UIGraphicsGetImageFromCurrentImageContext();    
-            UIGraphicsEndImageContext();
+            UIImage *thumbnail = [imageDict objectForKey:@"thumbnail"];
             
             // set button image to thumbnail
             
             UIButton *imageButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [imageButton setBackgroundImage:croppedImage forState:UIControlStateNormal];
-            imageButton.frame = CGRectMake(10.0, 40.0, thumbnail.size.width, thumbnail.size.height);
+            [imageButton setBackgroundImage:thumbnail forState:UIControlStateNormal];
+            imageButton.frame = CGRectMake(x, y, thumbnail.size.width, thumbnail.size.height);
             [self.view addSubview:imageButton];
-
+            x += 70.0;
         }
+        y += 70.0;
     }
 }
+
+
 
 
 - (void)viewDidUnload

@@ -19,11 +19,18 @@
 
 @interface BaseController : UIViewController {
     NSManagedObject *location;
+    NSMutableDictionary *imageDictionary;
 }
+
+@property (nonatomic, retain) NSMutableDictionary *imageDictionary;
 
 -(NSMutableArray *)getData:(CLLocation *)newLocation;
 -(NSManagedObject *)location:(NSString *)city withState:(NSString *)state;
 -(void)saveHistoryItem:(NSString *)label withValue:(NSString *)value;
 -(void)savePhoto:(UIImage *)screenshot;
+-(void)initImages;
+-(UIImage *)thumbnail:(UIImage *)image;
+-(NSArray *)locations;
+-(NSDictionary *)locationDictionary:(NSManagedObject *)selectedLocation;
 
 @end

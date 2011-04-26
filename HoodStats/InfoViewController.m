@@ -55,6 +55,7 @@
     } else {
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"label" ascending:YES];
         NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+        [sortDescriptor release];
         NSArray *historyItems = [[sectionLocation valueForKeyPath:@"HistoryItems"] sortedArrayUsingDescriptors:sortDescriptors];
         NSManagedObject *item = [historyItems objectAtIndex:[indexPath row]];
         cell.textLabel.text = [item valueForKey:@"label"];
@@ -75,20 +76,7 @@
 
 #pragma mark data collection
 
--(NSArray *)locations {
-    HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Location" inManagedObjectContext:context];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSSortDescriptor *dateSort = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:NO];
-    [request setEntity:entityDesc];
-	[request setSortDescriptors:[NSArray arrayWithObject:dateSort]];
-    NSError *error;
-    NSArray *objects = [context executeFetchRequest:request error:&error];
-    [request release];
-    [dateSort release];
-    return objects;
-}
+
 
 #pragma mark navigation
 

@@ -21,6 +21,7 @@
     [self initVideo];
     [self addLoadingLayer];
     dataRetrieved = NO;
+    [self performSelectorInBackground:@selector(initImages) withObject:nil];
 }
 
 -(void)initVideo {
