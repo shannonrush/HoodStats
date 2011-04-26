@@ -31,6 +31,5 @@
 -(void)initImages;
 -(UIImage *)thumbnail:(UIImage *)image;
 -(NSArray *)locations;
--(NSDictionary *)locationDictionary:(NSManagedObject *)selectedLocation;
 
 @end

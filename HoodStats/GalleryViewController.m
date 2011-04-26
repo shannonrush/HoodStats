@@ -7,6 +7,7 @@
 //
 
 #import "GalleryViewController.h"
+#import "HoodStatsAppDelegate.h"
 
 
 @implementation GalleryViewController
@@ -18,11 +19,10 @@
     [self initGallery];
 }
 
-
-
 -(void)initGallery {
     float y = 0.0;
-    NSDictionary *locationDictionary = [self locationDictionary:selectedLocation];;
+    NSString *locationString = [NSString stringWithFormat:@"%@, %@",[selectedLocation valueForKey:@"city"],[selectedLocation valueForKey:@"state"]];
+    NSDictionary *locationDictionary = [[HoodStatsAppDelegate imageDictionary]objectForKey:locationString];
     NSArray *dates = [locationDictionary allKeys];
     for (NSString *date in dates) {
         // add date label

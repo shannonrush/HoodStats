@@ -11,6 +11,8 @@
 
 @class HoodStatsViewController;
 
+NSMutableDictionary *imageDictionary;
+
 @interface HoodStatsAppDelegate : NSObject <UIApplicationDelegate> {
 
 }
@@ -24,5 +26,8 @@
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
+
++(NSMutableDictionary *)imageDictionary;
++(void)setImageDictionary:(NSMutableDictionary *)dictionary;
 
 @end

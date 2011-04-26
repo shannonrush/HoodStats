@@ -170,26 +170,27 @@
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 	[runLoop run];
-    imageDictionary = [[NSMutableDictionary alloc]init];
+    NSMutableDictionary *imageDict = [NSMutableDictionary dictionary];
     for (NSManagedObject *selectedLocation in [self locations]) {
         NSString *locationString = [NSString stringWithFormat:@"%@, %@",[selectedLocation valueForKey:@"city"],[selectedLocation valueForKey:@"state"]];
-        if (![[imageDictionary allKeys]containsObject:locationString]) {
-            [imageDictionary setObject:[NSMutableDictionary dictionary] forKey:locationString];
+        if (![[imageDict allKeys]containsObject:locationString]) {
+            [imageDict setObject:[NSMutableDictionary dictionary] forKey:locationString];
         }
         for (NSManagedObject *photo in [selectedLocation valueForKey:@"Photos"]) {
             NSDateFormatter*dateFormat =[[NSDateFormatter alloc] init];
             [dateFormat setDateFormat:@"MMMM e, YYYY"]; // May 8, 1977
             NSString *dateString = [dateFormat stringFromDate:[photo valueForKey:@"timestamp"]];   
             [dateFormat release];
-            if (![[[imageDictionary objectForKey:locationString] allKeys]containsObject:dateString]) {
-                [[imageDictionary objectForKey:locationString]setObject:[NSMutableArray array] forKey:dateString];
+            if (![[[imageDict objectForKey:locationString] allKeys]containsObject:dateString]) {
+                [[imageDict objectForKey:locationString]setObject:[NSMutableArray array] forKey:dateString];
             }
             UIImage *image = [UIImage imageWithData:[photo valueForKey:@"image"]];
             UIImage *thumbnail = [self thumbnail:image];
             NSDictionary *photoDictionary = [NSDictionary dictionaryWithObjectsAndKeys:image,@"image",thumbnail,@"thumbnail",nil];
-            [[[imageDictionary objectForKey:locationString]objectForKey:dateString]addObject:photoDictionary];
+            [[[imageDict objectForKey:locationString]objectForKey:dateString]addObject:photoDictionary];
         }
     }
+    [HoodStatsAppDelegate setImageDictionary:[[NSMutableDictionary alloc]initWithDictionary:imageDict]];
     [pool release];
 }
 
@@ -212,10 +213,7 @@
     return thumbnail;
 }
 
--(NSDictionary *)locationDictionary:(NSManagedObject *)selectedLocation {
-    NSString *locationString = [NSString stringWithFormat:@"%@, %@",[selectedLocation valueForKey:@"city"],[selectedLocation valueForKey:@"state"]];
-    return [imageDictionary objectForKey:locationString];
-}
+
 
 
 @end

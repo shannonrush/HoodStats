@@ -27,6 +27,14 @@
     return YES;
 }
 
++(NSMutableDictionary *)imageDictionary {
+    return imageDictionary;
+}
+
++(void)setImageDictionary:(NSMutableDictionary *)dictionary {
+    imageDictionary = dictionary;
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     /*
