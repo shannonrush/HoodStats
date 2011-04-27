@@ -68,6 +68,7 @@
 -(void)loadImage:(id)sender {    
     PhotoViewController *photoVC = [[PhotoViewController alloc]initWithNibName:@"PhotoViewController" bundle:[NSBundle mainBundle]];
     photoVC.initialImage = [self initialImage:[sender currentBackgroundImage]];
+    photoVC.images = locationImages;
     [self presentModalViewController:photoVC animated:YES];
     [photoVC release];
 }
@@ -80,7 +81,6 @@
             if ([imageDict objectForKey:@"thumbnail"]==thumbnail) {
                 return [imageDict objectForKey:@"image"];
             }
-
         }
     }
 }

@@ -11,11 +11,23 @@
 
 @implementation PhotoViewController
 
-@synthesize initialImage;
+@synthesize initialImage, images;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     photoView.image = initialImage;
+    [self initImageViews];
+}
+
+-(void)initImageViews {
+    imageViews = [[NSMutableArray alloc]init];
+    for (UIImage *image in images) {
+        UIImageView *view = [[UIImageView alloc]initWithImage:image];
+        view.frame = self.view.frame;
+        [self.view addSubview:view];
+        [imageViews addObject:view];
+        [view release];
+    }
 }
 
 - (void)dealloc

@@ -11,8 +11,13 @@
 
 @interface PhotoViewController : UIViewController {
     IBOutlet UIImageView *photoView;
+    NSMutableArray *images;
+    NSMutableArray *imageViews;
 }
 
 @property (nonatomic, retain) UIImage *initialImage;
+@property (nonatomic, retain) NSMutableArray *images;
+
+-(void)initImageViews;
 
 @end
