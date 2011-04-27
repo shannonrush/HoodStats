@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		C32EBA64135E6D840056AAD7 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C32EBA63135E6D840056AAD7 /* AssetsLibrary.framework */; };
+		C3431186136833F300862240 /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3431184136833F300862240 /* PhotoViewController.m */; };
+		C3431187136833F300862240 /* PhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3431185136833F300862240 /* PhotoViewController.xib */; };
 		C34355781357DD6800895B9C /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = C34355761357DD6800895B9C /* back.png */; };
 		C34355791357DD6800895B9C /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C34355771357DD6800895B9C /* back@2x.png */; };
 		C343557D1357DD7300895B9C /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = C343557B1357DD7300895B9C /* settings.png */; };
@@ -54,6 +56,9 @@
 
 /* Begin PBXFileReference section */
 		C32EBA63135E6D840056AAD7 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		C3431183136833F200862240 /* PhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoViewController.h; sourceTree = "<group>"; };
+		C3431184136833F300862240 /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
+		C3431185136833F300862240 /* PhotoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoViewController.xib; sourceTree = "<group>"; };
 		C34355761357DD6800895B9C /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back.png; sourceTree = "<group>"; };
 		C34355771357DD6800895B9C /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
 		C343557B1357DD7300895B9C /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
@@ -185,6 +190,8 @@
 				C37D388C135716E000239810 /* InfoViewController.m */,
 				C358D3A21363AE3A007B7A7A /* GalleryViewController.h */,
 				C358D3A31363AE3A007B7A7A /* GalleryViewController.m */,
+				C3431183136833F200862240 /* PhotoViewController.h */,
+				C3431184136833F300862240 /* PhotoViewController.m */,
 				C3AED33913562E8800ECA9C0 /* TouchXML */,
 				C3AED31013562D3400ECA9C0 /* Supporting Files */,
 			);
@@ -233,6 +240,7 @@
 				C3AED33F13566F4000ECA9C0 /* HoodStatsViewController.xib */,
 				C37D388D135716E000239810 /* InfoViewController.xib */,
 				C358D3A41363AE3A007B7A7A /* GalleryViewController.xib */,
+				C3431185136833F300862240 /* PhotoViewController.xib */,
 			);
 			name = XIB;
 			sourceTree = "<group>";
@@ -327,6 +335,7 @@
 				C34355811358C54800895B9C /* camera.png in Resources */,
 				C34355821358C54800895B9C /* camera@2x.png in Resources */,
 				C358D3A61363AE3A007B7A7A /* GalleryViewController.xib in Resources */,
+				C3431187136833F300862240 /* PhotoViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,6 +359,7 @@
 				C3AED34013566F4000ECA9C0 /* HoodStatsViewController.m in Sources */,
 				C37D388E135716E000239810 /* InfoViewController.m in Sources */,
 				C358D3A51363AE3A007B7A7A /* GalleryViewController.m in Sources */,
+				C3431186136833F300862240 /* PhotoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

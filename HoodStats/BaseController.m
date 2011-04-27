@@ -176,6 +176,7 @@
         if (![[imageDict allKeys]containsObject:locationString]) {
             [imageDict setObject:[NSMutableDictionary dictionary] forKey:locationString];
         }
+        NSMutableArray *locationImages = [NSMutableArray array];
         for (NSManagedObject *photo in [selectedLocation valueForKey:@"Photos"]) {
             NSDateFormatter*dateFormat =[[NSDateFormatter alloc] init];
             [dateFormat setDateFormat:@"MMMM e, YYYY"]; // May 8, 1977
@@ -186,25 +187,26 @@
             }
             UIImage *image = [UIImage imageWithData:[photo valueForKey:@"image"]];
             UIImage *thumbnail = [self thumbnail:image];
+            [locationImages addObject:image];
             NSDictionary *photoDictionary = [NSDictionary dictionaryWithObjectsAndKeys:image,@"image",thumbnail,@"thumbnail",nil];
             [[[imageDict objectForKey:locationString]objectForKey:dateString]addObject:photoDictionary];
         }
+        [[imageDict objectForKey:locationString]setObject:locationImages forKey:@"locationImages"];
     }
     [HoodStatsAppDelegate setImageDictionary:[[NSMutableDictionary alloc]initWithDictionary:imageDict]];
+    if ([HoodStatsAppDelegate imageDictionary]) {
+        NSLog(@"Finished creating imageDictionary.  Success!");
+    } else {
+        NSLog(@"Finished but failed");
+    }
     [pool release];
 }
 
 -(UIImage *)thumbnail:(UIImage *)image {
-    // make a thumbnail from the image and add it to a button
-    
-    // crop image to square
-    
     CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake(0, 0, 640.0, 640.0));
     UIImage *croppedImage = [UIImage imageWithCGImage:imageRef]; 
     CGImageRelease(imageRef);
-    
-    // resize to thumbnail
-    
+
     CGSize newSize = CGSizeMake(64.0, 64.0);
     UIGraphicsBeginImageContext(CGSizeMake(newSize.width, newSize.height));
     [croppedImage drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];

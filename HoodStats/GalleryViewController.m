@@ -8,6 +8,7 @@
 
 #import "GalleryViewController.h"
 #import "HoodStatsAppDelegate.h"
+#import "PhotoViewController.h"
 
 
 @implementation GalleryViewController
@@ -20,10 +21,14 @@
 }
 
 -(void)initGallery {
+    while (![HoodStatsAppDelegate imageDictionary]) {
+        NSLog(@"Waiting");
+    }
     float y = 0.0;
     NSString *locationString = [NSString stringWithFormat:@"%@, %@",[selectedLocation valueForKey:@"city"],[selectedLocation valueForKey:@"state"]];
-    NSDictionary *locationDictionary = [[HoodStatsAppDelegate imageDictionary]objectForKey:locationString];
-    NSArray *dates = [locationDictionary allKeys];
+    locationDictionary = [[NSDictionary alloc]initWithDictionary:[[HoodStatsAppDelegate imageDictionary]objectForKey:locationString]];
+    NSMutableArray *dates = [NSMutableArray arrayWithArray:[locationDictionary allKeys]];
+    [dates removeObject:@"locationImages"];
     for (NSString *date in dates) {
         // add date label
         float x = 20.0;
@@ -52,6 +57,7 @@
             UIButton *imageButton = [UIButton buttonWithType:UIButtonTypeCustom];
             [imageButton setBackgroundImage:thumbnail forState:UIControlStateNormal];
             imageButton.frame = CGRectMake(x, y, thumbnail.size.width, thumbnail.size.height);
+            [imageButton addTarget:self action:@selector(loadImage:) forControlEvents:UIControlEventTouchUpInside];
             [self.view addSubview:imageButton];
             x += 70.0;
         }
@@ -59,7 +65,26 @@
     }
 }
 
+-(void)loadImage:(id)sender {    
+    PhotoViewController *photoVC = [[PhotoViewController alloc]initWithNibName:@"PhotoViewController" bundle:[NSBundle mainBundle]];
+    photoVC.initialImage = [self initialImage:[sender currentBackgroundImage]];
+    [self presentModalViewController:photoVC animated:YES];
+    [photoVC release];
+}
+                            
+-(UIImage *)initialImage:(UIImage *)thumbnail {
+    NSMutableArray *dates = [NSMutableArray arrayWithArray:[locationDictionary allKeys]];
+    [dates removeObject:@"locationImages"];
+    for (NSString *date in dates) {
+        NSArray *images = [locationDictionary objectForKey:date];
+        for (NSDictionary *imageDict in images) {
+            if ([imageDict objectForKey:@"thumbnail"]==thumbnail) {
+                return [imageDict objectForKey:@"image"];
+            }
 
+        }
+    }
+}
 
 
 - (void)viewDidUnload

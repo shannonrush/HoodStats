@@ -74,10 +74,6 @@
     }
 }
 
-#pragma mark data collection
-
-
-
 #pragma mark navigation
 
 -(IBAction)loadMainScreen {
