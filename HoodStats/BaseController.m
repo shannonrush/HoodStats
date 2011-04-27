@@ -176,7 +176,6 @@
         if (![[imageDict allKeys]containsObject:locationString]) {
             [imageDict setObject:[NSMutableDictionary dictionary] forKey:locationString];
         }
-        NSMutableArray *locationImages = [NSMutableArray array];
         for (NSManagedObject *photo in [selectedLocation valueForKey:@"Photos"]) {
             NSDateFormatter*dateFormat =[[NSDateFormatter alloc] init];
             [dateFormat setDateFormat:@"MMMM e, YYYY"]; // May 8, 1977
@@ -187,11 +186,9 @@
             }
             UIImage *image = [UIImage imageWithData:[photo valueForKey:@"image"]];
             UIImage *thumbnail = [self thumbnail:image];
-            [locationImages addObject:image];
             NSDictionary *photoDictionary = [NSDictionary dictionaryWithObjectsAndKeys:image,@"image",thumbnail,@"thumbnail",nil];
             [[[imageDict objectForKey:locationString]objectForKey:dateString]addObject:photoDictionary];
         }
-        [[imageDict objectForKey:locationString]setObject:locationImages forKey:@"locationImages"];
     }
     [HoodStatsAppDelegate setImageDictionary:[[NSMutableDictionary alloc]initWithDictionary:imageDict]];
     if ([HoodStatsAppDelegate imageDictionary]) {

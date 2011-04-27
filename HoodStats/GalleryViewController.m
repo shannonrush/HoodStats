@@ -18,6 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initGallery];
+    locationImages = [[NSMutableArray alloc]initWithArray:[self locationImages]];
 }
 
 -(void)initGallery {
@@ -27,8 +28,7 @@
     float y = 0.0;
     NSString *locationString = [NSString stringWithFormat:@"%@, %@",[selectedLocation valueForKey:@"city"],[selectedLocation valueForKey:@"state"]];
     locationDictionary = [[NSDictionary alloc]initWithDictionary:[[HoodStatsAppDelegate imageDictionary]objectForKey:locationString]];
-    NSMutableArray *dates = [NSMutableArray arrayWithArray:[locationDictionary allKeys]];
-    [dates removeObject:@"locationImages"];
+    NSArray *dates = [locationDictionary allKeys];
     for (NSString *date in dates) {
         // add date label
         float x = 20.0;
@@ -73,8 +73,7 @@
 }
                             
 -(UIImage *)initialImage:(UIImage *)thumbnail {
-    NSMutableArray *dates = [NSMutableArray arrayWithArray:[locationDictionary allKeys]];
-    [dates removeObject:@"locationImages"];
+    NSArray *dates = [locationDictionary allKeys];
     for (NSString *date in dates) {
         NSArray *images = [locationDictionary objectForKey:date];
         for (NSDictionary *imageDict in images) {
@@ -86,21 +85,30 @@
     }
 }
 
+-(NSMutableArray *)locationImages {
+    NSMutableArray *locImages = [NSMutableArray array];
+    NSArray *dates = [locationDictionary allKeys];
+    for (NSString *date in dates) {
+        NSArray *images = [locationDictionary objectForKey:date];
+        for (NSDictionary *imageDict in images) {
+            [locImages addObject:[imageDict objectForKey:@"image"]];
+        }
+    }
+    return locImages;
+}
 
-- (void)viewDidUnload
-{
+
+- (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [super dealloc];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
