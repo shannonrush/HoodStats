@@ -15,7 +15,6 @@
 @synthesize imageDictionary;
 
 -(NSMutableArray *)getData:(CLLocation *)newLocation {
-    
     // Get zip code from lat long for Zillow call
     NSURL *locURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/xml?latlng=%f,%f&sensor=true",newLocation.coordinate.latitude,newLocation.coordinate.longitude]];
     CXMLDocument *locXML = [[[CXMLDocument alloc] initWithContentsOfURL:locURL options:0 error:nil] autorelease];
@@ -148,8 +147,29 @@
     if (![context save:&error]) {
         NSLog(@"Couldn't save: %@", [error localizedDescription]);
         return;
+    } else {
+        NSMutableDictionary *imageDictionary = [HoodStatsAppDelegate imageDictionary];
+        NSMutableDictionary *locationDictionary = [imageDictionary objectForKey:[self locationString:location]];
+        NSMutableArray *dateArray = [locationDictionary objectForKey:[self dateString:[NSDate date]]];
+        UIImage *thumbnail = [self thumbnail:screenshot];
+        NSDictionary *photoDictionary = [NSDictionary dictionaryWithObjectsAndKeys:screenshot,@"image",thumbnail,@"thumbnail",nil];
+        [dateArray addObject:photoDictionary];
     }
 }
+
+-(NSString *)locationString:(NSManagedObject *)theLocation {
+    return [NSString stringWithFormat:@"%@, %@",[theLocation valueForKey:@"city"],[theLocation valueForKey:@"state"]];
+}
+
+-(NSString *)dateString:(NSDate *)date {
+    NSDateFormatter *dateFormat =[[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"MMMM e, YYYY"]; // May 8, 1977
+    NSString *dateString = [dateFormat stringFromDate:date];   
+    [dateFormat release];
+    return dateString;
+}
+                                     
+                                     
 
 -(NSArray *)locations {
     HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
@@ -172,15 +192,12 @@
 	[runLoop run];
     NSMutableDictionary *imageDict = [NSMutableDictionary dictionary];
     for (NSManagedObject *selectedLocation in [self locations]) {
-        NSString *locationString = [NSString stringWithFormat:@"%@, %@",[selectedLocation valueForKey:@"city"],[selectedLocation valueForKey:@"state"]];
+        NSString *locationString = [self locationString:selectedLocation];
         if (![[imageDict allKeys]containsObject:locationString]) {
             [imageDict setObject:[NSMutableDictionary dictionary] forKey:locationString];
         }
         for (NSManagedObject *photo in [selectedLocation valueForKey:@"Photos"]) {
-            NSDateFormatter*dateFormat =[[NSDateFormatter alloc] init];
-            [dateFormat setDateFormat:@"MMMM e, YYYY"]; // May 8, 1977
-            NSString *dateString = [dateFormat stringFromDate:[photo valueForKey:@"timestamp"]];   
-            [dateFormat release];
+            NSString *dateString = [self dateString:[photo valueForKey:@"timestamp"]];
             if (![[[imageDict objectForKey:locationString] allKeys]containsObject:dateString]) {
                 [[imageDict objectForKey:locationString]setObject:[NSMutableArray array] forKey:dateString];
             }

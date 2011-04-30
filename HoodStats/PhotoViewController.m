@@ -2,7 +2,7 @@
 //  PhotoViewController.m
 //  HoodStats
 //
-//  Created by Shannon Rush on 4/27/11.
+//  Created by Shannon Rush on 4/29/11.
 //  Copyright 2011 Rush Devo. All rights reserved.
 //
 
@@ -11,12 +11,12 @@
 
 @implementation PhotoViewController
 
-@synthesize initialImage, images;
+@synthesize images, initialImage;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    photoView.image = initialImage;
     [self initImageViews];
+    [self initButtons];
 }
 
 -(void)initImageViews {
@@ -28,6 +28,39 @@
         [imageViews addObject:view];
         [view release];
     }
+}
+
+-(void)initButtons {
+    buttonView = [[UIImageView alloc]initWithFrame:self.view.frame];
+    
+    UIImage *backImage = [UIImage imageNamed:@"back.png"];
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton setBackgroundImage:backImage forState:UIControlStateNormal];
+    backButton.frame = CGRectMake(15, 395, 45, 45 );
+    [backButton addTarget:self action:@selector(backPhoto) forControlEvents:UIControlEventTouchUpInside];
+    [buttonView addSubview:backButton];
+    
+    UIImage *fwdImage = [UIImage imageNamed:@"forward.png"];
+    UIButton *forwardButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [forwardButton setBackgroundImage:fwdImage forState:UIControlStateNormal];
+    forwardButton.frame = CGRectMake(265, 395, 45, 45);
+    [forwardButton addTarget:self action:@selector(forwardPhoto) forControlEvents:UIControlEventTouchUpInside];
+    [buttonView addSubview:forwardButton];
+    
+    [self.view addSubview:buttonView];
+    [self fadeOutButtons];
+}
+
+-(void)fadeOutButtons {
+    [UIView animateWithDuration:3.0 delay:2.0 options:UIViewAnimationOptionAllowUserInteraction animations:^{buttonView.alpha = 0.0;} completion:nil];
+}
+
+-(void)backPhoto {
+    
+}
+
+-(void)forwardPhoto {
+    
 }
 
 - (void)dealloc

@@ -31,5 +31,7 @@
 -(void)initImages;
 -(UIImage *)thumbnail:(UIImage *)image;
 -(NSArray *)locations;
+-(NSString *)locationString:(NSManagedObject *)theLocation;
+-(NSString *)dateString:(NSDate *)date;
 
 @end

@@ -2,7 +2,7 @@
 //  PhotoViewController.h
 //  HoodStats
 //
-//  Created by Shannon Rush on 4/27/11.
+//  Created by Shannon Rush on 4/29/11.
 //  Copyright 2011 Rush Devo. All rights reserved.
 //
 
@@ -10,14 +10,17 @@
 
 
 @interface PhotoViewController : UIViewController {
-    IBOutlet UIImageView *photoView;
-    NSMutableArray *images;
     NSMutableArray *imageViews;
+    UIView *buttonView;
 }
 
 @property (nonatomic, retain) UIImage *initialImage;
 @property (nonatomic, retain) NSMutableArray *images;
 
 -(void)initImageViews;
+-(void)initButtons;
+-(void)fadeOutButtons;
+-(void)backPhoto;
+-(void)forwardPhoto;
 
 @end

@@ -16,12 +16,12 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    [self performSelectorInBackground:@selector(initImages) withObject:nil];
 
     data = [[NSMutableArray alloc]init];
     [self initVideo];
     [self addLoadingLayer];
     dataRetrieved = NO;
-    [self performSelectorInBackground:@selector(initImages) withObject:nil];
 }
 
 -(void)initVideo {
@@ -77,7 +77,7 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
+
 	if (!locationManager) {
 		locationManager = [[CLLocationManager alloc] init];
 	}	
@@ -177,7 +177,6 @@
         [UIView setAnimationBeginsFromCurrentState:YES];
         [UIView setAnimationDuration:(1.0/10.0)];
         [UIView setAnimationDelay:(1.0/15.0)];
-        
         for (float i=0.0; i<[overlayGraphicViews count]; i=i+1.0) {
             float directionToSite = i*1.0;
             CLLocationDistance dist = 50.0;
@@ -217,6 +216,7 @@
             }
             [markerView setCenter:overlayCenter];  
             markerView.transform = CGAffineTransformMakeRotation(angle);
+            [UIView commitAnimations];
         }
     }
 }
@@ -385,6 +385,7 @@
 }
 
 - (void)viewDidUnload {
+
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
 }

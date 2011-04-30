@@ -26,7 +26,7 @@
         NSLog(@"Waiting");
     }
     float y = 0.0;
-    NSString *locationString = [NSString stringWithFormat:@"%@, %@",[selectedLocation valueForKey:@"city"],[selectedLocation valueForKey:@"state"]];
+    NSString *locationString = [self locationString:selectedLocation];
     locationDictionary = [[NSDictionary alloc]initWithDictionary:[[HoodStatsAppDelegate imageDictionary]objectForKey:locationString]];
     NSArray *dates = [locationDictionary allKeys];
     for (NSString *date in dates) {
