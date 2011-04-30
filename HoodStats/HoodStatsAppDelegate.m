@@ -27,6 +27,14 @@
     return YES;
 }
 
++(BOOL)dataRetrieved {
+    return dataRetrieved;
+}
+
++(void)setDataRetrieved:(BOOL)dataIsRetrieved {
+    dataRetrieved = dataIsRetrieved;
+}
+
 +(NSMutableDictionary *)imageDictionary {
     return imageDictionary;
 }

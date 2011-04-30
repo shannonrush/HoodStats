@@ -8,6 +8,7 @@
 
 #import "HoodStatsViewController.h"
 #import "InfoViewController.h"
+#import "HoodStatsAppDelegate.h"
 
 @implementation HoodStatsViewController
 
@@ -368,9 +369,9 @@
 	didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation {
     [self setCurrentLocation:newLocation];
-    if (!dataRetrieved) {
+    if (![HoodStatsAppDelegate dataRetrieved]) {
         [data setArray:[self getData:newLocation]];
-        dataRetrieved = YES;
+        [HoodStatsAppDelegate setDataRetrieved:YES];
     }
     [self updateUI];
 }

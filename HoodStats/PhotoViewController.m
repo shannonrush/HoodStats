@@ -24,44 +24,76 @@
     for (UIImage *image in images) {
         UIImageView *view = [[UIImageView alloc]initWithImage:image];
         view.frame = self.view.frame;
-        [self.view addSubview:view];
         [imageViews addObject:view];
+        if (image==initialImage) {
+            currentImageView = view;
+            [self.view addSubview:currentImageView];
+        }
         [view release];
+    }
+    if (currentImageView==[imageViews lastObject]) {
+        forwardButton.hidden = YES;
+    } else if (currentImageView==[imageViews objectAtIndex:0]){
+        backButton.hidden = YES;
     }
 }
 
--(void)initButtons {
-    buttonView = [[UIImageView alloc]initWithFrame:self.view.frame];
-    
+-(void)initButtons {    
     UIImage *backImage = [UIImage imageNamed:@"back.png"];
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton setBackgroundImage:backImage forState:UIControlStateNormal];
     backButton.frame = CGRectMake(15, 395, 45, 45 );
     [backButton addTarget:self action:@selector(backPhoto) forControlEvents:UIControlEventTouchUpInside];
-    [buttonView addSubview:backButton];
+    [self.view addSubview:backButton];
     
     UIImage *fwdImage = [UIImage imageNamed:@"forward.png"];
-    UIButton *forwardButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    forwardButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [forwardButton setBackgroundImage:fwdImage forState:UIControlStateNormal];
     forwardButton.frame = CGRectMake(265, 395, 45, 45);
     [forwardButton addTarget:self action:@selector(forwardPhoto) forControlEvents:UIControlEventTouchUpInside];
-    [buttonView addSubview:forwardButton];
+    [self.view addSubview:forwardButton];
     
-    [self.view addSubview:buttonView];
-    [self fadeOutButtons];
+    //[self fadeOutButtons];
 }
 
 -(void)fadeOutButtons {
-    [UIView animateWithDuration:3.0 delay:2.0 options:UIViewAnimationOptionAllowUserInteraction animations:^{buttonView.alpha = 0.0;} completion:nil];
+    [UIView animateWithDuration:3.0 delay:2.0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+        backButton.alpha = 0.0;
+        forwardButton.alpha = 0.0;
+    } completion:nil];
 }
 
 -(void)backPhoto {
-    
+
 }
 
 -(void)forwardPhoto {
+    int index = [imageViews indexOfObject:currentImageView];
+    if (index+1==[imageViews indexOfObject:[imageViews lastObject]]) {
+        forwardButton.hidden = YES;
+    }
+    UIImageView *nextImage = [imageViews objectAtIndex:index+1];
+    [self.view insertSubview:nextImage belowSubview:currentImageView];
     
+    CALayer *layer = [currentImageView layer];
+    layer.anchorPoint = CGPointMake(0.0, 0.5);
+    currentImageView.frame = CGRectMake(0, 0, 320.0, 460.0);
+    
+    CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"transform"];
+    CATransform3D rotateTransform = CATransform3DMakeRotation(M_PI/2.0f,0.0f,-1.0f,0.0f);
+    [anim setFromValue:[NSValue valueWithCATransform3D:CATransform3DIdentity]];
+    [anim setToValue:[NSValue valueWithCATransform3D:rotateTransform]];
+    [anim setDuration:0.75f];
+    [layer addAnimation:anim forKey:nil];
+    [layer setTransform:rotateTransform];
+    currentImageView = nextImage;
 }
+     
+-(UIImageView *)nextImageView {
+    int nextIndex = [imageViews indexOfObject:currentImageView]+1;
+    return [imageViews objectAtIndex:nextIndex];
+}
+
 
 - (void)dealloc
 {

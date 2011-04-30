@@ -187,6 +187,7 @@
 }
 
 -(void)initImages {
+    NSLog(@"IN INIT IMAGES");
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 	[runLoop run];

@@ -7,11 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
 
 
 @interface PhotoViewController : UIViewController {
     NSMutableArray *imageViews;
-    UIView *buttonView;
+    UIImageView *currentImageView;
+    UIButton *backButton;
+    UIButton *forwardButton;
 }
 
 @property (nonatomic, retain) UIImage *initialImage;
@@ -22,5 +25,6 @@
 -(void)fadeOutButtons;
 -(void)backPhoto;
 -(void)forwardPhoto;
+-(UIImageView *)nextImageView;
 
 @end

@@ -13,6 +13,8 @@
 
 NSMutableDictionary *imageDictionary;
 
+BOOL dataRetrieved;
+
 @interface HoodStatsAppDelegate : NSObject <UIApplicationDelegate> {
 
 }
@@ -27,6 +29,8 @@ NSMutableDictionary *imageDictionary;
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 
++(BOOL)dataRetrieved;
++(void)setDataRetrieved:(BOOL)dataIsRetrieved;
 +(NSMutableDictionary *)imageDictionary;
 +(void)setImageDictionary:(NSMutableDictionary *)dictionary;
 

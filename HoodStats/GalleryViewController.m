@@ -19,6 +19,7 @@
     [super viewDidLoad];
     [self initGallery];
     locationImages = [[NSMutableArray alloc]initWithArray:[self locationImages]];
+    
 }
 
 -(void)initGallery {
