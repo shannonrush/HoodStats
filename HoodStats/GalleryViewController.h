@@ -13,6 +13,8 @@
     NSManagedObject *selectedLocation;
     NSDictionary *locationDictionary;
     NSMutableArray *locationImages;
+    IBOutlet UILabel *locationLabel;
+    IBOutlet UIScrollView *scrollView;
 }
 
 @property (nonatomic, retain) NSManagedObject *selectedLocation;
@@ -22,6 +24,8 @@
 -(void)loadImage:(id)sender;
 -(UIImage *)initialImage:(UIImage *)thumbnail;
 -(NSMutableArray *)locationImages;
+-(IBAction)navBack;
+-(void)increaseScrollViewHeight:(float)increase;
 
 
 @end

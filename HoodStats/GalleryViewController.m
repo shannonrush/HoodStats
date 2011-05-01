@@ -19,7 +19,10 @@
     [super viewDidLoad];
     [self initGallery];
     locationImages = [[NSMutableArray alloc]initWithArray:[self locationImages]];
-    
+}
+
+-(void)increaseScrollViewHeight:(float)increase {
+    scrollView.contentSize = CGSizeMake(280.0, scrollView.contentSize.height + increase);
 }
 
 -(void)initGallery {
@@ -27,16 +30,23 @@
         NSLog(@"Waiting");
     }
     float y = 0.0;
+    scrollView.contentSize = CGSizeMake(280.0, 0);
     NSString *locationString = [self locationString:selectedLocation];
     locationDictionary = [[NSDictionary alloc]initWithDictionary:[[HoodStatsAppDelegate imageDictionary]objectForKey:locationString]];
+    locationLabel.font = [UIFont fontWithName:@"Bellerose" size:24.0];
+    locationLabel.text = [NSString stringWithFormat:@"%@ Photos",locationString];
+    
     NSArray *dates = [locationDictionary allKeys];
     for (NSString *date in dates) {
         // add date label
-        float x = 20.0;
+        float x = 0.0;
 
         UILabel *dateLabel = [[UILabel alloc]initWithFrame:CGRectMake(x, y, 300.0, 30.0)];
+        dateLabel.backgroundColor = [UIColor clearColor];
+        dateLabel.font = [UIFont fontWithName:@"Bellerose" size:18.0];
         dateLabel.text = date;
-        [self.view addSubview:dateLabel];
+        [self increaseScrollViewHeight:dateLabel.frame.size.height];
+        [scrollView addSubview:dateLabel];
         [dateLabel release];
         
         y += 35.0;
@@ -48,7 +58,7 @@
             if (index > 0 && index % 4 == 0) {
                 // make a new row
                 y += 70.0;
-                x = 20.0;
+                x = 0.0;
             }
             
             UIImage *thumbnail = [imageDict objectForKey:@"thumbnail"];
@@ -59,7 +69,8 @@
             [imageButton setBackgroundImage:thumbnail forState:UIControlStateNormal];
             imageButton.frame = CGRectMake(x, y, thumbnail.size.width, thumbnail.size.height);
             [imageButton addTarget:self action:@selector(loadImage:) forControlEvents:UIControlEventTouchUpInside];
-            [self.view addSubview:imageButton];
+            [self increaseScrollViewHeight:imageButton.frame.size.height];
+            [scrollView addSubview:imageButton];
             x += 70.0;
         }
         y += 70.0;
@@ -96,6 +107,10 @@
         }
     }
     return locImages;
+}
+
+-(IBAction)navBack {
+    [self.parentViewController dismissModalViewControllerAnimated: YES];
 }
 
 

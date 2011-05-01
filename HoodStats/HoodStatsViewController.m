@@ -17,7 +17,8 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    [self performSelectorInBackground:@selector(initImages) withObject:nil];
+    if (![HoodStatsAppDelegate imageDictionary]) 
+        [self performSelectorInBackground:@selector(initImages) withObject:nil];
 
     data = [[NSMutableArray alloc]init];
     [self initVideo];

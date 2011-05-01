@@ -148,13 +148,23 @@
         NSLog(@"Couldn't save: %@", [error localizedDescription]);
         return;
     } else {
-        NSMutableDictionary *imageDictionary = [HoodStatsAppDelegate imageDictionary];
-        NSMutableDictionary *locationDictionary = [imageDictionary objectForKey:[self locationString:location]];
-        NSMutableArray *dateArray = [locationDictionary objectForKey:[self dateString:[NSDate date]]];
-        UIImage *thumbnail = [self thumbnail:screenshot];
-        NSDictionary *photoDictionary = [NSDictionary dictionaryWithObjectsAndKeys:screenshot,@"image",thumbnail,@"thumbnail",nil];
-        [dateArray addObject:photoDictionary];
+        [self performSelectorInBackground:@selector(addPhotoToImageDictionary:) withObject:screenshot];
     }
+}
+
+-(void)addPhotoToImageDictionary:(UIImage *)screenshot {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+    [runLoop run];
+    while (![HoodStatsAppDelegate imageDictionary]) {
+        NSLog(@"Trying to save, waiting...");
+    }
+    NSMutableDictionary *locationDictionary = [imageDictionary objectForKey:[self locationString:location]];
+    NSMutableArray *dateArray = [locationDictionary objectForKey:[self dateString:[NSDate date]]];
+    UIImage *thumbnail = [self thumbnail:screenshot];
+    NSDictionary *photoDictionary = [NSDictionary dictionaryWithObjectsAndKeys:screenshot,@"image",thumbnail,@"thumbnail",nil];
+    [dateArray addObject:photoDictionary];
+    [pool release];
 }
 
 -(NSString *)locationString:(NSManagedObject *)theLocation {
