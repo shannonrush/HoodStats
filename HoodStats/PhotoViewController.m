@@ -15,8 +15,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self initImageViews];
     [self initButtons];
+    [self initImageViews];
 }
 
 -(void)initImageViews {
@@ -31,11 +31,9 @@
         }
         [view release];
     }
-    if (currentImageView==[imageViews lastObject]) {
-        forwardButton.hidden = YES;
-    } else if (currentImageView==[imageViews objectAtIndex:0]){
-        backButton.hidden = YES;
-    }
+    [self.view bringSubviewToFront:forwardButton];
+    [self.view bringSubviewToFront:backButton];
+    [self resetButtons];
 }
 
 -(void)initButtons {    
@@ -53,6 +51,7 @@
     [forwardButton addTarget:self action:@selector(forwardPhoto) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:forwardButton];
     
+
     //[self fadeOutButtons];
 }
 
@@ -63,35 +62,50 @@
     } completion:nil];
 }
 
+-(void)resetButtons {
+    int index = [imageViews indexOfObject:currentImageView];
+    if (index==[imageViews indexOfObject:[imageViews lastObject]]) {
+        [UIView animateWithDuration:0.75 animations:^{forwardButton.alpha = 0.0;}];
+    } else {
+        [UIView animateWithDuration:0.75 animations:^{forwardButton.alpha = 1.0;}];
+    }
+    if (index==0) {
+        [UIView animateWithDuration:0.75 animations:^{backButton.alpha = 0.0;}];
+    } else {
+        [UIView animateWithDuration:0.75 animations:^{backButton.alpha = 1.0;}];
+    }
+}
+
 -(void)backPhoto {
+    int index = [imageViews indexOfObject:currentImageView];
+    UIImageView *previousImage = [imageViews objectAtIndex:index-1];
+    if (![previousImage isDescendantOfView:self.view]) {
+        previousImage.frame = CGRectMake(-320, 0, 320, 460);
+        [self.view insertSubview:previousImage belowSubview:backButton];
+    }
+    [UIView animateWithDuration:2.0 
+                     animations:^{
+                         previousImage.frame = CGRectMake(0, 0, 320, 460);
+                     }];
+
+    currentImageView = previousImage;
+    [self resetButtons];
 
 }
 
 -(void)forwardPhoto {
+
     int index = [imageViews indexOfObject:currentImageView];
-    if (index+1==[imageViews indexOfObject:[imageViews lastObject]]) {
-        forwardButton.hidden = YES;
-    }
+
     UIImageView *nextImage = [imageViews objectAtIndex:index+1];
     [self.view insertSubview:nextImage belowSubview:currentImageView];
-    
-    CALayer *layer = [currentImageView layer];
-    layer.anchorPoint = CGPointMake(0.0, 0.5);
-    currentImageView.frame = CGRectMake(0, 0, 320.0, 460.0);
-    
-    CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"transform"];
-    CATransform3D rotateTransform = CATransform3DMakeRotation(M_PI/2.0f,0.0f,-1.0f,0.0f);
-    [anim setFromValue:[NSValue valueWithCATransform3D:CATransform3DIdentity]];
-    [anim setToValue:[NSValue valueWithCATransform3D:rotateTransform]];
-    [anim setDuration:0.75f];
-    [layer addAnimation:anim forKey:nil];
-    [layer setTransform:rotateTransform];
+    [UIView animateWithDuration:2.0 
+                     animations:^{
+                         currentImageView.frame = CGRectMake(-320, 0, 320, 460);
+                     }];
     currentImageView = nextImage;
-}
-     
--(UIImageView *)nextImageView {
-    int nextIndex = [imageViews indexOfObject:currentImageView]+1;
-    return [imageViews objectAtIndex:nextIndex];
+    [self resetButtons];
+
 }
 
 

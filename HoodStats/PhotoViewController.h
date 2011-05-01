@@ -25,6 +25,6 @@
 -(void)fadeOutButtons;
 -(void)backPhoto;
 -(void)forwardPhoto;
--(UIImageView *)nextImageView;
+-(void)resetButtons;
 
 @end
