@@ -10,11 +10,16 @@
 #import "HoodStatsAppDelegate.h"
 #import "GalleryViewController.h"
 
+
 @implementation InfoViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     locations = [[NSArray alloc]initWithArray:[self locations]];
+    infoTable.backgroundColor = [UIColor clearColor];
+    infoTable.backgroundView = nil;
+    infoTable.separatorColor = [UIColor clearColor];
+
 }
 
 # pragma mark UITableViewDelegate
@@ -61,6 +66,12 @@
         cell.textLabel.text = [item valueForKey:@"label"];
         cell.detailTextLabel.text = [item valueForKey:@"value"];
     }
+    UIImage *cellImage = [UIImage imageNamed:@"infoCellBG.png"];
+    UIImageView *cellView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 280, 44)];
+    cellView.image = cellImage;
+    cell.backgroundView = cellView;
+    [cellView release];
+    cell.backgroundColor = [UIColor clearColor];
     return cell;
 }
 

@@ -34,13 +34,24 @@
     [self.view bringSubviewToFront:forwardButton];
     [self.view bringSubviewToFront:backButton];
     [self resetButtons];
+    
+    UIImage *navImage = [UIImage imageNamed:@"navBack.png"];
+    navButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [navButton setBackgroundImage:navImage forState:UIControlStateNormal];
+    navButton.frame = CGRectMake(15, 20, 45, 45);
+    [navButton addTarget:self action:@selector(navBack) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:navButton];
+}
+
+-(void)navBack {
+    [self.parentViewController dismissModalViewControllerAnimated: YES];
 }
 
 -(void)initButtons {    
     UIImage *backImage = [UIImage imageNamed:@"back.png"];
     backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton setBackgroundImage:backImage forState:UIControlStateNormal];
-    backButton.frame = CGRectMake(15, 395, 45, 45 );
+    backButton.frame = CGRectMake(15, 395, 45, 45);
     [backButton addTarget:self action:@selector(backPhoto) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backButton];
     
@@ -51,16 +62,8 @@
     [forwardButton addTarget:self action:@selector(forwardPhoto) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:forwardButton];
     
-
-    //[self fadeOutButtons];
 }
 
--(void)fadeOutButtons {
-    [UIView animateWithDuration:3.0 delay:2.0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
-        backButton.alpha = 0.0;
-        forwardButton.alpha = 0.0;
-    } completion:nil];
-}
 
 -(void)resetButtons {
     int index = [imageViews indexOfObject:currentImageView];

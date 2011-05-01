@@ -15,6 +15,7 @@
     UIImageView *currentImageView;
     UIButton *backButton;
     UIButton *forwardButton;
+    UIButton *navButton;
 }
 
 @property (nonatomic, retain) UIImage *initialImage;
@@ -26,5 +27,6 @@
 -(void)backPhoto;
 -(void)forwardPhoto;
 -(void)resetButtons;
+-(void)navBack;
 
 @end

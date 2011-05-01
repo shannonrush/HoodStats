@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C30A684D136CEE570061787D /* navBack.png in Resources */ = {isa = PBXBuildFile; fileRef = C30A684B136CEE570061787D /* navBack.png */; };
+		C30A684E136CEE570061787D /* navBack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C30A684C136CEE570061787D /* navBack@2x.png */; };
+		C30A6852136CFAAF0061787D /* infobg.png in Resources */ = {isa = PBXBuildFile; fileRef = C30A6850136CFAAF0061787D /* infobg.png */; };
+		C30A6853136CFAAF0061787D /* infobg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C30A6851136CFAAF0061787D /* infobg@2x.png */; };
+		C30A6856136CFD570061787D /* infoCellBG.png in Resources */ = {isa = PBXBuildFile; fileRef = C30A6854136CFD570061787D /* infoCellBG.png */; };
+		C30A6857136CFD570061787D /* infoCellBG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C30A6855136CFD570061787D /* infoCellBG@2x.png */; };
 		C32EBA64135E6D840056AAD7 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C32EBA63135E6D840056AAD7 /* AssetsLibrary.framework */; };
 		C343119D136B316C00862240 /* forward.png in Resources */ = {isa = PBXBuildFile; fileRef = C343119B136B316C00862240 /* forward.png */; };
 		C343119E136B316C00862240 /* forward@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C343119C136B316C00862240 /* forward@2x.png */; };
@@ -57,6 +63,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C30A684B136CEE570061787D /* navBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navBack.png; sourceTree = "<group>"; };
+		C30A684C136CEE570061787D /* navBack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navBack@2x.png"; sourceTree = "<group>"; };
+		C30A6850136CFAAF0061787D /* infobg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = infobg.png; sourceTree = "<group>"; };
+		C30A6851136CFAAF0061787D /* infobg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "infobg@2x.png"; sourceTree = "<group>"; };
+		C30A6854136CFD570061787D /* infoCellBG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = infoCellBG.png; sourceTree = "<group>"; };
+		C30A6855136CFD570061787D /* infoCellBG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "infoCellBG@2x.png"; sourceTree = "<group>"; };
 		C32EBA63135E6D840056AAD7 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		C343119B136B316C00862240 /* forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = forward.png; sourceTree = "<group>"; };
 		C343119C136B316C00862240 /* forward@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "forward@2x.png"; sourceTree = "<group>"; };
@@ -252,6 +264,12 @@
 		C3AED3431356705300ECA9C0 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				C30A6854136CFD570061787D /* infoCellBG.png */,
+				C30A6855136CFD570061787D /* infoCellBG@2x.png */,
+				C30A6850136CFAAF0061787D /* infobg.png */,
+				C30A6851136CFAAF0061787D /* infobg@2x.png */,
+				C30A684B136CEE570061787D /* navBack.png */,
+				C30A684C136CEE570061787D /* navBack@2x.png */,
 				C343119B136B316C00862240 /* forward.png */,
 				C343119C136B316C00862240 /* forward@2x.png */,
 				C343557F1358C54800895B9C /* camera.png */,
@@ -344,6 +362,12 @@
 				C343119D136B316C00862240 /* forward.png in Resources */,
 				C343119E136B316C00862240 /* forward@2x.png in Resources */,
 				C34311A3136B41DE00862240 /* PhotoViewController.xib in Resources */,
+				C30A684D136CEE570061787D /* navBack.png in Resources */,
+				C30A684E136CEE570061787D /* navBack@2x.png in Resources */,
+				C30A6852136CFAAF0061787D /* infobg.png in Resources */,
+				C30A6853136CFAAF0061787D /* infobg@2x.png in Resources */,
+				C30A6856136CFD570061787D /* infoCellBG.png in Resources */,
+				C30A6857136CFD570061787D /* infoCellBG@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
