@@ -31,9 +31,6 @@
         }
         [view release];
     }
-    [self.view bringSubviewToFront:forwardButton];
-    [self.view bringSubviewToFront:backButton];
-    [self resetButtons];
     
     UIImage *navImage = [UIImage imageNamed:@"navBack.png"];
     navButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -41,6 +38,10 @@
     navButton.frame = CGRectMake(15, 20, 45, 45);
     [navButton addTarget:self action:@selector(navBack) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:navButton];
+    
+    [self.view bringSubviewToFront:forwardButton];
+    [self.view bringSubviewToFront:backButton];
+    [self resetButtons];
 }
 
 -(void)navBack {
@@ -66,6 +67,8 @@
 
 
 -(void)resetButtons {
+    [self.view bringSubviewToFront:forwardButton];
+    [self.view bringSubviewToFront:backButton];
     int index = [imageViews indexOfObject:currentImageView];
     if (index==[imageViews indexOfObject:[imageViews lastObject]]) {
         [UIView animateWithDuration:0.75 animations:^{forwardButton.alpha = 0.0;}];
