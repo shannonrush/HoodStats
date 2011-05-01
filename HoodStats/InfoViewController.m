@@ -68,6 +68,7 @@
     }
     UIImage *cellImage = [UIImage imageNamed:@"infoCellBG.png"];
     UIImageView *cellView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 280, 44)];
+    cellView.layer.opacity = 0.5;
     cellView.image = cellImage;
     cell.backgroundView = cellView;
     [cellView release];
