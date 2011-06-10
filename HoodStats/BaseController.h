@@ -19,10 +19,8 @@
 
 @interface BaseController : UIViewController {
     NSManagedObject *location;
-    NSMutableDictionary *imageDictionary;
 }
 
-@property (nonatomic, retain) NSMutableDictionary *imageDictionary;
 
 -(NSMutableArray *)getData:(CLLocation *)newLocation;
 -(NSManagedObject *)location:(NSString *)city withState:(NSString *)state;

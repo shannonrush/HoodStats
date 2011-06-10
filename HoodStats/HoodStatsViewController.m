@@ -14,7 +14,6 @@
 
 @synthesize currentLocation, captureSession, previewLayer, captureOutput, orientation, screenshotImage;
 
-
 -(void)viewDidLoad {
     [super viewDidLoad];
     if (![HoodStatsAppDelegate imageDictionary]) 
@@ -24,22 +23,27 @@
     [self initVideo];
     [self addLoadingLayer];
     dataRetrieved = NO;
+    bubbleViews = [[NSMutableArray alloc]init];
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+	if (!locationManager) {
+		locationManager = [[CLLocationManager alloc] init];
+	}	
+    [[UIAccelerometer sharedAccelerometer] setDelegate:self];
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [locationManager setDelegate:self];
+    [locationManager startUpdatingLocation];
+    [[self captureSession] startRunning];
+    
 }
 
 -(void)initVideo {
     // device
     AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     
-    // auto-focus
-    if ([device isFocusModeSupported:AVCaptureFocusModeAutoFocus]) {
-		NSError *error = nil;
-		if ([device lockForConfiguration:&error]) {
-			device.focusMode					= AVCaptureFocusModeAutoFocus;
-			[device unlockForConfiguration];
-		}
-    }
-	
-    // auto-flash
 	if ([device isFlashModeSupported:AVCaptureFlashModeAuto]) {
 		NSError *error = nil;
 		if ([device lockForConfiguration:&error]) {
@@ -76,24 +80,6 @@
     
 }
 
-
--(void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-
-	if (!locationManager) {
-		locationManager = [[CLLocationManager alloc] init];
-	}	
-    
-    [[UIAccelerometer sharedAccelerometer] setDelegate:self];
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    [locationManager setDelegate:self];
-    [locationManager startUpdatingHeading];
-    [locationManager startUpdatingLocation];
-    [[self captureSession] startRunning];
-    
-}
-
 -(void)addLoadingLayer {
     scanningImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"scanning.png"]];
     scanningImage.frame = CGRectMake(18, 80, 286, 2);
@@ -113,11 +99,12 @@
     }
                      completion:^ (BOOL finished) {
                          if (finished) {
+                             scanningImage.alpha = 0.0;
                              [scanningImage removeFromSuperview];
                              if ([data count]==0) {
                                  sleep(0.01);
                              }
-                             [self performSelector:@selector(addOverlay) withObject:nil afterDelay:0.01];
+                             [self performSelector:@selector(setupUI) withObject:nil afterDelay:0.01];
                              [self performSelector:@selector(addButtons) withObject:nil afterDelay:0.01];
                              [loadingImage removeFromSuperview];
                          }
@@ -140,12 +127,37 @@
     [[self view] addSubview:cameraButton];
 }
 
+-(void)setupUI {
+    [self addOverlay];
+    motionManager = [[CMMotionManager alloc] init];
+    motionManager.deviceMotionUpdateInterval = 0.1; 
+    motionQueue = [[NSOperationQueue mainQueue] retain];
+    CMDeviceMotionHandler motionHandler = ^ (CMDeviceMotion *motion, NSError *error) {
+        [self processMotion:motion withError:error];
+    };
+    
+    [motionManager startDeviceMotionUpdatesToQueue:motionQueue withHandler:motionHandler];
+}
+
+-(void)processMotion:(CMDeviceMotion *)motion withError:(NSError *)error {
+    if (!referenceAttitude) {
+        referenceAttitude = [motionManager.deviceMotion.attitude retain];
+    }
+    CMAttitude *currentAttitude = motion.attitude;
+    [currentAttitude multiplyByInverseOfAttitude:referenceAttitude];
+    for (UIView *view in bubbleViews) {
+        view.transform = CGAffineTransformMakeRotation(currentAttitude.yaw);
+        CGPoint viewCenter = view.center;
+        viewCenter.x += currentAttitude.roll * 10;
+        view.center = viewCenter;
+        NSLog(@"%f",cityLabel.center.x);
+    }
+}
+
 - (void)addOverlay {
-	NSMutableArray *tempViews = [NSMutableArray arrayWithCapacity:[data count]-1];
     for (NSDictionary *stat in data) {
         if ([[stat allKeys]containsObject:@"label"]&&[[stat allKeys]containsObject:@"value"]) {
-            UIView *markerView;
-            UILabel *markerLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 200, 220, 55)];
+            UILabel *markerLabel = [[UILabel alloc] initWithFrame:CGRectMake(250*([data indexOfObject:stat]-1)+50, 200, 220, 55)];
             markerLabel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble.png"]];
             [markerLabel setOpaque:NO];
             markerLabel.adjustsFontSizeToFitWidth = YES;
@@ -153,75 +165,23 @@
             markerLabel.textColor = [UIColor whiteColor]; 
             markerLabel.font = [UIFont fontWithName:@"Verdana" size:34.0f];
             markerLabel.text = [NSString stringWithFormat:@"  %@: %@  ",[stat objectForKey:@"label"],[stat objectForKey:@"value"]];
-            markerView = markerLabel;
-            [tempViews addObject:markerView];
-            [[self view] addSubview:markerView];
-        } else if ([[stat allKeys]containsObject:@"label"]) {
-            UIView *markerView;
-            UILabel *markerLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 100, 1200, 100)];
-            markerLabel.backgroundColor = [UIColor clearColor];
-            markerLabel.textColor = [UIColor colorWithRed:25.0f/255.0f green:127.0f/255.0f blue:161.0f/255.0f alpha:1.0]; 
-            markerLabel.adjustsFontSizeToFitWidth = YES;
-            markerLabel.textAlignment = UITextAlignmentCenter;
-            markerLabel.font = [UIFont fontWithName:@"Verdana" size:45.0f];
-            markerLabel.text = [stat objectForKey:@"label"];
-            markerView = markerLabel;
-            [tempViews addObject:markerView];
-            [[self view] addSubview:markerView];
+            [bubbleViews addObject:markerLabel];
+            [self.view addSubview:markerLabel];
+            [markerLabel release];
+        } else if ([[stat allKeys]containsObject:@"city"]) {
+            cityLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 100, 100, 100)];
+            cityLabel.backgroundColor = [UIColor clearColor];
+            cityLabel.textColor = [HoodStatsAppDelegate popColor]; 
+            cityLabel.adjustsFontSizeToFitWidth = YES;
+            cityLabel.textAlignment = UITextAlignmentCenter;
+            cityLabel.font = [UIFont fontWithName:@"Bellerose" size:60.0f];
+            cityLabel.text = [stat objectForKey:@"city"];
+            [bubbleViews addObject:cityLabel];
+            [self.view addSubview:cityLabel];
         }
     }
-	overlayGraphicViews = [tempViews copy];
 }
 
-- (void)updateUI {
-    if ([data count]>0) {
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        [UIView setAnimationDuration:(1.0/10.0)];
-        [UIView setAnimationDelay:(1.0/15.0)];
-        for (float i=0.0; i<[overlayGraphicViews count]; i=i+1.0) {
-            float directionToSite = i*1.0;
-            CLLocationDistance dist = 50.0;
-            
-            double deltaAlt = 0;
-            // the first item in array is the city label
-            if (i==0.0) {
-                deltaAlt = 20.0;
-            }             
-            
-            double vertAngleToSite = atan2(deltaAlt, dist);
-            
-            double relativeDirectionToSite =  magCompassHeadingInDeg * (M_PI / 180.) - directionToSite;
-            if (relativeDirectionToSite < (-M_PI / 2.0)) {
-                relativeDirectionToSite = (-M_PI / 2.0); 
-            }
-            
-            if (relativeDirectionToSite > (M_PI / 2.0)) {
-                relativeDirectionToSite = (M_PI / 2.0); 
-            }
-            
-            double relativeVertAngleToSite = vertAngleToSite - vertAngle;
-            
-            UIView *markerView = [overlayGraphicViews objectAtIndex:i];
-            CGPoint overlayCenter = [markerView center];
-            CGFloat oldY = overlayCenter.y;
-            CGFloat oldX = overlayCenter.x;
-            overlayCenter.y = 240.0 - 537.8 * sin(relativeVertAngleToSite);    
-            overlayCenter.x = 160.0 - 497.8 * sin(relativeDirectionToSite);
-            if (oldX != 0.0f) {
-                overlayCenter.x += oldX;
-                overlayCenter.x *= .5;
-            }
-            if (oldY != 0.0f) {
-                overlayCenter.y += oldY;
-                overlayCenter.y *= .5;
-            }
-            [markerView setCenter:overlayCenter];  
-            markerView.transform = CGAffineTransformMakeRotation(angle);
-            [UIView commitAnimations];
-        }
-    }
-}
 
 -(void)loadInfoScreen {
     InfoViewController *info = [[InfoViewController alloc]initWithNibName:@"InfoViewController" bundle:[NSBundle mainBundle]];
@@ -253,7 +213,7 @@
              [image drawInRect:CGRectMake(0, 0, imageSize.width, imageSize.height)];
              UIGraphicsPopContext();
              
-             for (UIView *view in overlayGraphicViews) {
+             for (UIView *view in [self.view subviews]) {
                  [self renderView:view inContext:context];
              }
              
@@ -348,33 +308,19 @@
     [alertView release];        
 }
 
-#pragma mark UIAccelerometerDelegate
-- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration;
-{
-    vertAngle = atan2(acceleration.y, acceleration.z) + M_PI/2.0;
-    vertAngleInDeg = vertAngle * 180.0f/M_PI;
-    
-    angle = -atan2(acceleration.y, acceleration.x) - M_PI/2.0;
-    angleInDeg = angle * 180.0f/M_PI;
-    [self updateUI];
-}
 
 #pragma mark CLLocationManagerDelegate
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading {
-    magCompassHeadingInDeg = [newHeading magneticHeading];
-    [self updateUI];
-}
 
 - (void)locationManager:(CLLocationManager *)manager
 	didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation {
-    [self setCurrentLocation:newLocation];
-    if (![HoodStatsAppDelegate dataRetrieved]) {
+    NSTimeInterval age = [newLocation.timestamp timeIntervalSinceNow];
+    if(age < 60.0 &&![HoodStatsAppDelegate dataRetrieved]) {
+        [self setCurrentLocation:newLocation];
         [data setArray:[self getData:newLocation]];
         [HoodStatsAppDelegate setDataRetrieved:YES];
     }
-    [self updateUI];
+
 }
 
 #pragma mark memory management
@@ -404,7 +350,8 @@
 	[previewLayer release];
     [currentLocation release]; 
     [locationManager release]; 
-    [overlayGraphicViews release];
+    
+    [bubbleViews release];
     
     [super dealloc];
 }

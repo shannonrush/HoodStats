@@ -23,7 +23,6 @@
 
 -(void)initImageViews;
 -(void)initButtons;
--(void)fadeOutButtons;
 -(void)backPhoto;
 -(void)forwardPhoto;
 -(void)resetButtons;

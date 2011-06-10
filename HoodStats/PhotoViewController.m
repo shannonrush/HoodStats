@@ -39,8 +39,6 @@
     [navButton addTarget:self action:@selector(navBack) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:navButton];
     
-    [self.view bringSubviewToFront:forwardButton];
-    [self.view bringSubviewToFront:backButton];
     [self resetButtons];
 }
 
@@ -69,6 +67,7 @@
 -(void)resetButtons {
     [self.view bringSubviewToFront:forwardButton];
     [self.view bringSubviewToFront:backButton];
+    [self.view bringSubviewToFront:navButton];
     int index = [imageViews indexOfObject:currentImageView];
     if (index==[imageViews indexOfObject:[imageViews lastObject]]) {
         [UIView animateWithDuration:0.75 animations:^{forwardButton.alpha = 0.0;}];

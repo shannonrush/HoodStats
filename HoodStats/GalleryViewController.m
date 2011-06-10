@@ -34,6 +34,7 @@
     NSString *locationString = [self locationString:selectedLocation];
     locationDictionary = [[NSDictionary alloc]initWithDictionary:[[HoodStatsAppDelegate imageDictionary]objectForKey:locationString]];
     locationLabel.font = [UIFont fontWithName:@"Bellerose" size:24.0];
+    locationLabel.textColor = [HoodStatsAppDelegate popColor];
     locationLabel.text = [NSString stringWithFormat:@"%@ Photos",locationString];
     
     NSArray *dates = [locationDictionary allKeys];

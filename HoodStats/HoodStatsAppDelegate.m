@@ -43,6 +43,11 @@
     imageDictionary = dictionary;
 }
 
++(UIColor *)popColor {
+    return [UIColor colorWithRed:25.0f/255.0f green:127.0f/255.0f blue:161.0f/255.0f alpha:1.0];
+}
+
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     /*

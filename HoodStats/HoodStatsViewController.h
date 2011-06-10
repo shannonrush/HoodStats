@@ -6,29 +6,35 @@
 //  Copyright 2011 Rush Devo. All rights reserved.
 //
 #import "BaseController.h"
+#import <CoreMotion/CoreMotion.h>
 
 
-@interface HoodStatsViewController : BaseController <UIAccelerometerDelegate, CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate> {
+
+@interface HoodStatsViewController : BaseController <CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate> {
     
     UIImageView *loadingImage;
     UIImageView *scanningImage;
 
     NSMutableArray *data;
+    NSMutableArray *bubbleViews;
+    UILabel *cityLabel;
     AVCaptureStillImageOutput *captureOutput;
     AVCaptureSession *captureSession;
     AVCaptureVideoPreviewLayer *previewLayer;
-	NSArray *overlayGraphicViews;
     CLLocationManager *locationManager;
+    CMMotionManager *motionManager;
+    NSOperationQueue *motionQueue;
+    CMAttitude *referenceAttitude;
     
 	CLLocation *currentLocation;
     
     CLLocationDirection magCompassHeadingInDeg;
-    double angle; //rad
-    double angleInDeg;
-    double vertAngle; //rad
-    double vertAngleInDeg;
     
     BOOL dataRetrieved;
+    
+    UIView *firstView;
+    UIView *lastView;
+    
 }
 
 @property(nonatomic, retain)CLLocation *currentLocation;
@@ -39,14 +45,17 @@
 @property (nonatomic, retain)UIImage *screenshotImage;
 
 -(void)initVideo;
+- (void)addOverlay;
 -(void)addLoadingLayer;
 -(void)animateScanner;
 -(void)loadInfoScreen;
 -(void)addButtons;
 -(void)takePhoto;
+- (void)updateUI;
 - (AVCaptureConnection *)connectionWithMediaType:(NSString *)mediaType fromConnections:(NSArray *)connections;
 - (void)renderView:(UIView*)view inContext:(CGContextRef)context;
 - (void) captureStillImageFailedWithError:(NSError *)error;
 - (void) cannotWriteToAssetLibrary;
+-(void)processMotion:(CMDeviceMotion *)motion withError:(NSError *)error;
 
 @end

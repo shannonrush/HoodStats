@@ -9,12 +9,26 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "HoodStats/HoodStatsViewController.m"
-         timestampString = "325958831.983273"
+         timestampString = "329423770.485919"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "227"
-         endingLineNumber = "227"
+         startingLineNumber = "167"
+         endingLineNumber = "167"
          landmarkName = "-loadInfoScreen"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "HoodStats/BaseController.m"
+         timestampString = "329425200.397498"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "20"
+         endingLineNumber = "20"
+         landmarkName = "-getData:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

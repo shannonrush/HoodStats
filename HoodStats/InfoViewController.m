@@ -19,7 +19,6 @@
     infoTable.backgroundColor = [UIColor clearColor];
     infoTable.backgroundView = nil;
     infoTable.separatorColor = [UIColor clearColor];
-
 }
 
 # pragma mark UITableViewDelegate
@@ -28,11 +27,23 @@
     return [locations count];
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    NSManagedObject *sectionLocation = [locations objectAtIndex:section];
-    NSString *header = [NSString stringWithFormat:@"%@, %@",[sectionLocation valueForKey:@"city"],[sectionLocation valueForKey:@"state"]];
-    return header;
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 35.0;
 }
+
+- (UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *sectionView = [[[UIView alloc]initWithFrame:CGRectMake(20, 0, 280.0, 35.0)]autorelease];
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 280.0, 35.0)];
+    label.backgroundColor = [UIColor clearColor];
+    label.textColor = [HoodStatsAppDelegate popColor];
+    label.font = [UIFont fontWithName:@"Bellerose" size:28.0];
+    NSManagedObject *sectionLocation = [locations objectAtIndex:section];
+    label.text = [self locationString:sectionLocation];
+    [sectionView addSubview:label];
+    [label release];
+    return sectionView;
+}
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSManagedObject *sectionLocation = [locations objectAtIndex:section];

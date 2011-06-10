@@ -8,17 +8,20 @@
 
 #import "BaseController.h"
 #import "HoodStatsAppDelegate.h"
+#import <MapKit/MapKit.h>
 
 
 @implementation BaseController
 
-@synthesize imageDictionary;
-
 -(NSMutableArray *)getData:(CLLocation *)newLocation {
-    // Get zip code from lat long for Zillow call
+    // get city state with MKReverseGeocoder
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(newLocation.coordinate.latitude, newLocation.coordinate.longitude);
+    MKReverseGeocoder *geocoder = [[MKReverseGeocoder alloc]initWithCoordinate:coordinate];
+    
+    
+    // Get city/state from lat long for Zillow call
     NSURL *locURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/xml?latlng=%f,%f&sensor=true",newLocation.coordinate.latitude,newLocation.coordinate.longitude]];
     CXMLDocument *locXML = [[[CXMLDocument alloc] initWithContentsOfURL:locURL options:0 error:nil] autorelease];
-    NSLog(@"%@",locXML);
     NSString *locCity = [[[locXML nodesForXPath:@"/GeocodeResponse/result[1]/address_component[type/text()='locality']/long_name"error:nil]objectAtIndex:0]stringValue];
     NSString *locState = [[[locXML nodesForXPath:@"/GeocodeResponse/result[1]/address_component[type/text()='administrative_area_level_1']/short_name"error:nil]objectAtIndex:0]stringValue];
     location = [self location:locCity withState:locState];
@@ -36,18 +39,11 @@
     // get data from Zillow
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.zillow.com/webservice/GetDemographics.htm?zws-id=X1-ZWz1bvq9sepl3f_90hcq&city=%@&state=%@",locCity,locState]];
     CXMLDocument *xml = [[[CXMLDocument alloc] initWithContentsOfURL:url options:0 error:nil] autorelease];
-    NSLog(@"%@",xml);
     NSMutableArray *data = [[NSMutableArray alloc]init];
-    
-    //lat long
-    NSString *latitude = [[[xml nodesForXPath:@"//latitude" error:nil]objectAtIndex:0]stringValue];
-    NSString *longitude = [[[xml nodesForXPath:@"//longitude" error:nil]objectAtIndex:0]stringValue];
-    
-    [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:latitude,@"latitude",longitude,@"longitude",nil]];
     
     // City
     NSString *city = [[[xml nodesForXPath:@"//city" error:nil]objectAtIndex:0]stringValue];
-    [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@               %@                   %@",city,city,city],@"label",nil]];
+    [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:city,@"city",nil]];
     
     //Median Single Family Home
     NSString *medianHomeValue = [[[xml nodesForXPath:@"//attribute[name='Median Single Family Home Value']/values/city/value" error:nil]objectAtIndex:0]stringValue];
@@ -86,7 +82,6 @@
             [self saveHistoryItem:[item objectForKey:@"label"] withValue:[item objectForKey:@"value"]];
     }
     
-    //TODO: Finish gathering data
     NSMutableArray *returnData = [NSMutableArray arrayWithArray:data];
     [data release];
     return returnData;
@@ -159,8 +154,16 @@
     while (![HoodStatsAppDelegate imageDictionary]) {
         NSLog(@"Trying to save, waiting...");
     }
-    NSMutableDictionary *locationDictionary = [imageDictionary objectForKey:[self locationString:location]];
-    NSMutableArray *dateArray = [locationDictionary objectForKey:[self dateString:[NSDate date]]];
+    NSString *locationString = [self locationString:location];
+    if (![[[HoodStatsAppDelegate imageDictionary]allKeys]containsObject:locationString]) {
+        [[HoodStatsAppDelegate imageDictionary] setObject:[NSMutableDictionary dictionary] forKey:locationString];
+    }
+    NSMutableDictionary *locationDictionary = [[HoodStatsAppDelegate imageDictionary] objectForKey:locationString];
+    NSString *dateString = [self dateString:[NSDate date]];
+    if (![[locationDictionary allKeys]containsObject:dateString]) {
+        [locationDictionary setObject:[NSMutableArray array] forKey:dateString];
+    }
+    NSMutableArray *dateArray = [locationDictionary objectForKey:dateString];
     UIImage *thumbnail = [self thumbnail:screenshot];
     NSDictionary *photoDictionary = [NSDictionary dictionaryWithObjectsAndKeys:screenshot,@"image",thumbnail,@"thumbnail",nil];
     [dateArray addObject:photoDictionary];
@@ -178,9 +181,7 @@
     [dateFormat release];
     return dateString;
 }
-                                     
-                                     
-
+        
 -(NSArray *)locations {
     HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
@@ -207,7 +208,11 @@
         if (![[imageDict allKeys]containsObject:locationString]) {
             [imageDict setObject:[NSMutableDictionary dictionary] forKey:locationString];
         }
-        for (NSManagedObject *photo in [selectedLocation valueForKey:@"Photos"]) {
+        NSMutableArray *locationPhotos = [NSMutableArray arrayWithArray:[[selectedLocation valueForKey:@"Photos"] allObjects]];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:YES];
+        [locationPhotos sortUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+        [sortDescriptor release];
+        for (NSManagedObject *photo in locationPhotos) {
             NSString *dateString = [self dateString:[photo valueForKey:@"timestamp"]];
             if (![[[imageDict objectForKey:locationString] allKeys]containsObject:dateString]) {
                 [[imageDict objectForKey:locationString]setObject:[NSMutableArray array] forKey:dateString];
