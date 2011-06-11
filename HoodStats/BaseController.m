@@ -23,6 +23,9 @@
         [locCity setString:[[[locXML nodesForXPath:@"/GeocodeResponse/result[1]/address_component[type/text()='locality']/long_name"error:nil]objectAtIndex:0]stringValue]];
         [locState setString:[[[locXML nodesForXPath:@"/GeocodeResponse/result[1]/address_component[type/text()='administrative_area_level_1']/short_name"error:nil]objectAtIndex:0]stringValue]];
     }
+    
+    location = [self location:locCity withState:locState];
+    
     // remove existing historyItems for location if any
     NSSet *historyItems = [location valueForKeyPath:@"HistoryItems"];
     if ([historyItems count]>0) {
