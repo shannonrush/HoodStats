@@ -13,7 +13,6 @@
 
 NSMutableDictionary *imageDictionary;
 
-BOOL dataRetrieved;
 UIColor *popColor;
 
 @interface HoodStatsAppDelegate : NSObject <UIApplicationDelegate> {
@@ -30,8 +29,6 @@ UIColor *popColor;
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 
-+(BOOL)dataRetrieved;
-+(void)setDataRetrieved:(BOOL)dataIsRetrieved;
 +(NSMutableDictionary *)imageDictionary;
 +(void)setImageDictionary:(NSMutableDictionary *)dictionary;
 +(UIColor *)popColor;

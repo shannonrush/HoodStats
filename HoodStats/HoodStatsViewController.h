@@ -51,7 +51,6 @@
 -(void)loadInfoScreen;
 -(void)addButtons;
 -(void)takePhoto;
-- (void)updateUI;
 - (AVCaptureConnection *)connectionWithMediaType:(NSString *)mediaType fromConnections:(NSArray *)connections;
 - (void)renderView:(UIView*)view inContext:(CGContextRef)context;
 - (void) captureStillImageFailedWithError:(NSError *)error;

@@ -64,7 +64,6 @@
 		C3AED353135670B300ECA9C0 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3AED352135670B300ECA9C0 /* CoreLocation.framework */; };
 		C3AED355135670B800ECA9C0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3AED354135670B800ECA9C0 /* AVFoundation.framework */; };
 		C3F613A9135A317E0067C9A9 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3F613A8135A317E0067C9A9 /* CoreVideo.framework */; };
-		C3F9DD3913A2A065004A8AE5 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3F9DD3813A2A065004A8AE5 /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -149,7 +148,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3F9DD3913A2A065004A8AE5 /* MapKit.framework in Frameworks */,
 				C34D6E03139D6ABF00F4CCAD /* CoreMotion.framework in Frameworks */,
 				C32EBA64135E6D840056AAD7 /* AssetsLibrary.framework in Frameworks */,
 				C3F613A9135A317E0067C9A9 /* CoreVideo.framework in Frameworks */,

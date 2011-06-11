@@ -8,24 +8,21 @@
 
 #import "BaseController.h"
 #import "HoodStatsAppDelegate.h"
-#import <MapKit/MapKit.h>
 
 
 @implementation BaseController
 
 -(NSMutableArray *)getData:(CLLocation *)newLocation {
-    // get city state with MKReverseGeocoder
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(newLocation.coordinate.latitude, newLocation.coordinate.longitude);
-    MKReverseGeocoder *geocoder = [[MKReverseGeocoder alloc]initWithCoordinate:coordinate];
-    
     
     // Get city/state from lat long for Zillow call
     NSURL *locURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/xml?latlng=%f,%f&sensor=true",newLocation.coordinate.latitude,newLocation.coordinate.longitude]];
     CXMLDocument *locXML = [[[CXMLDocument alloc] initWithContentsOfURL:locURL options:0 error:nil] autorelease];
-    NSString *locCity = [[[locXML nodesForXPath:@"/GeocodeResponse/result[1]/address_component[type/text()='locality']/long_name"error:nil]objectAtIndex:0]stringValue];
-    NSString *locState = [[[locXML nodesForXPath:@"/GeocodeResponse/result[1]/address_component[type/text()='administrative_area_level_1']/short_name"error:nil]objectAtIndex:0]stringValue];
-    location = [self location:locCity withState:locState];
-    
+    NSMutableString *locCity = [NSMutableString stringWithString:@"Cupertino"];
+    NSMutableString *locState = [NSMutableString stringWithString:@"CA"];
+    if ([[locXML nodesForXPath:@"/GeocodeResponse/result[1]/address_component[type/text()='locality']/long_name"error:nil]count]>0 && [[locXML nodesForXPath:@"/GeocodeResponse/result[1]/address_component[type/text()='administrative_area_level_1']/short_name"error:nil]count]>0) {
+        [locCity setString:[[[locXML nodesForXPath:@"/GeocodeResponse/result[1]/address_component[type/text()='locality']/long_name"error:nil]objectAtIndex:0]stringValue]];
+        [locState setString:[[[locXML nodesForXPath:@"/GeocodeResponse/result[1]/address_component[type/text()='administrative_area_level_1']/short_name"error:nil]objectAtIndex:0]stringValue]];
+    }
     // remove existing historyItems for location if any
     NSSet *historyItems = [location valueForKeyPath:@"HistoryItems"];
     if ([historyItems count]>0) {
@@ -42,41 +39,58 @@
     NSMutableArray *data = [[NSMutableArray alloc]init];
     
     // City
-    NSString *city = [[[xml nodesForXPath:@"//city" error:nil]objectAtIndex:0]stringValue];
-    [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:city,@"city",nil]];
+    if ([[xml nodesForXPath:@"//city" error:nil]count]>0) {
+        NSString *city = [[[xml nodesForXPath:@"//city" error:nil]objectAtIndex:0]stringValue];
+        [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:city,@"city",nil]];
+    }
     
     //Median Single Family Home
-    NSString *medianHomeValue = [[[xml nodesForXPath:@"//attribute[name='Median Single Family Home Value']/values/city/value" error:nil]objectAtIndex:0]stringValue];
-    [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"$%@",medianHomeValue] ,@"value",@"Average Single Family Home",@"label",nil]];
+    if ([[xml nodesForXPath:@"//attribute[name='Median Single Family Home Value']/values/city/value" error:nil]count]>0) {
+        NSString *medianHomeValue = [[[xml nodesForXPath:@"//attribute[name='Median Single Family Home Value']/values/city/value" error:nil]objectAtIndex:0]stringValue];
+        [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"$%@",medianHomeValue] ,@"value",@"Average Single Family Home",@"label",nil]];
+    }
     
     //Median List Price
-    NSString *medianListPrice = [[[xml nodesForXPath:@"//attribute[name='Median List Price']/values/city/value" error:nil]objectAtIndex:0]stringValue];
-    [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"$%@",medianListPrice] ,@"value",@"Average List Price",@"label",nil]];
+    if ([[xml nodesForXPath:@"//attribute[name='Median List Price']/values/city/value" error:nil]count]>0) {
+        NSString *medianListPrice = [[[xml nodesForXPath:@"//attribute[name='Median List Price']/values/city/value" error:nil]objectAtIndex:0]stringValue];
+        [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"$%@",medianListPrice] ,@"value",@"Average List Price",@"label",nil]];
+    }
+    
     
     //Median Sale Price
-    NSString *medianSalePrice = [[[xml nodesForXPath:@"//attribute[name='Median Sale Price']/values/city/value" error:nil]objectAtIndex:0]stringValue];
-    [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"$%@",medianSalePrice] ,@"value",@"Average Sale Price",@"label",nil]];
+    if ([[xml nodesForXPath:@"//attribute[name='Median Sale Price']/values/city/value" error:nil]count]>0) {
+        NSString *medianSalePrice = [[[xml nodesForXPath:@"//attribute[name='Median Sale Price']/values/city/value" error:nil]objectAtIndex:0]stringValue];
+        [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"$%@",medianSalePrice] ,@"value",@"Average Sale Price",@"label",nil]];
+    }
     
     //Median Household Income
-    NSString *medianHouseholdIncome = [[[xml nodesForXPath:@"//attribute[name='Median Household Income']/values/city/value" error:nil]objectAtIndex:0]stringValue];
-    [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"$%@",medianHouseholdIncome] ,@"value",@"Average Household Income",@"label",nil]];
-    
+    if ([[xml nodesForXPath:@"//attribute[name='Median Household Income']/values/city/value" error:nil]count]>0) {
+        NSString *medianHouseholdIncome = [[[xml nodesForXPath:@"//attribute[name='Median Household Income']/values/city/value" error:nil]objectAtIndex:0]stringValue];
+        [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"$%@",medianHouseholdIncome] ,@"value",@"Average Household Income",@"label",nil]];
+    }
+        
     //Single Males
-    NSString *maleString = [[[xml nodesForXPath:@"//attribute[name='Single Males']/values/city/value" error:nil]objectAtIndex:0]stringValue];
-    int malePercent = round([maleString floatValue]*100);
-    NSString *singleMales = [NSString stringWithFormat:@"%i%%",malePercent];
-    [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:singleMales,@"value",@"Single Guys",@"label",nil]];
-    
+    if ([[xml nodesForXPath:@"//attribute[name='Single Males']/values/city/value" error:nil]count]>0) {
+        NSString *maleString = [[[xml nodesForXPath:@"//attribute[name='Single Males']/values/city/value" error:nil]objectAtIndex:0]stringValue];
+        int malePercent = round([maleString floatValue]*100);
+        NSString *singleMales = [NSString stringWithFormat:@"%i%%",malePercent];
+        [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:singleMales,@"value",@"Single Guys",@"label",nil]];
+    }
+
     //Single Females
-    NSString *femaleString = [[[xml nodesForXPath:@"//attribute[name='Single Females']/values/city/value" error:nil]objectAtIndex:0]stringValue];
-    int femalePercent = round([femaleString floatValue]*100);
-    NSString *singleFemales = [NSString stringWithFormat:@"%i%%",femalePercent];
-    [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:singleFemales,@"value",@"Single Ladies",@"label",nil]];
-    
+    if ([[xml nodesForXPath:@"//attribute[name='Single Females']/values/city/value" error:nil]count]>0) {
+        NSString *femaleString = [[[xml nodesForXPath:@"//attribute[name='Single Females']/values/city/value" error:nil]objectAtIndex:0]stringValue];
+        int femalePercent = round([femaleString floatValue]*100);
+        NSString *singleFemales = [NSString stringWithFormat:@"%i%%",femalePercent];
+        [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:singleFemales,@"value",@"Single Ladies",@"label",nil]];
+    }
+
     //Median Age
-    NSString *medianAge = [[[xml nodesForXPath:@"//attribute[name='Median Age']/values/city/value" error:nil]objectAtIndex:0]stringValue];
-    [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:medianAge,@"value",@"Average Age",@"label",nil]];
-    
+    if ([[xml nodesForXPath:@"//attribute[name='Median Age']/values/city/value" error:nil]count]>0) {
+        NSString *medianAge = [[[xml nodesForXPath:@"//attribute[name='Median Age']/values/city/value" error:nil]objectAtIndex:0]stringValue];
+        [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:medianAge,@"value",@"Average Age",@"label",nil]];
+    }
+
     for (NSDictionary *item in data) {
         if ([[item allKeys]containsObject:@"value"]) 
             [self saveHistoryItem:[item objectForKey:@"label"] withValue:[item objectForKey:@"value"]];
@@ -86,6 +100,8 @@
     [data release];
     return returnData;
 }
+
+#pragma mark custom
 
 -(NSManagedObject *)location:(NSString *)city withState:(NSString *)state {
     HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
@@ -244,9 +260,7 @@
     UIGraphicsEndImageContext();
     return thumbnail;
 }
-
-
-
+ 
 
 @end
 

@@ -129,14 +129,20 @@
 
 -(void)setupUI {
     [self addOverlay];
-    motionManager = [[CMMotionManager alloc] init];
-    motionManager.deviceMotionUpdateInterval = 0.1; 
-    motionQueue = [[NSOperationQueue mainQueue] retain];
-    CMDeviceMotionHandler motionHandler = ^ (CMDeviceMotion *motion, NSError *error) {
-        [self processMotion:motion withError:error];
-    };
-    
-    [motionManager startDeviceMotionUpdatesToQueue:motionQueue withHandler:motionHandler];
+    if ([bubbleViews count]==0) {
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Connection Problem" message:@"We couldn't get information about your location.  Please check your connection and try again!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    } else {
+        motionManager = [[CMMotionManager alloc] init];
+        motionManager.deviceMotionUpdateInterval = 0.1; 
+        motionQueue = [[NSOperationQueue mainQueue] retain];
+        CMDeviceMotionHandler motionHandler = ^ (CMDeviceMotion *motion, NSError *error) {
+            [self processMotion:motion withError:error];
+        };
+        
+        [motionManager startDeviceMotionUpdatesToQueue:motionQueue withHandler:motionHandler];
+    }
 }
 
 -(void)processMotion:(CMDeviceMotion *)motion withError:(NSError *)error {
@@ -150,7 +156,6 @@
         CGPoint viewCenter = view.center;
         viewCenter.x += currentAttitude.roll * 10;
         view.center = viewCenter;
-        NSLog(@"%f",cityLabel.center.x);
     }
 }
 
@@ -193,22 +198,18 @@
 -(void)takePhoto {
     AVCaptureConnection *videoConnection = [self connectionWithMediaType:AVMediaTypeVideo fromConnections:[self.captureOutput connections]];
     if ([videoConnection isVideoOrientationSupported]) 
-	{
 		[videoConnection setVideoOrientation:[[UIDevice currentDevice] orientation]]; 
-	}
 
     [self.captureOutput captureStillImageAsynchronouslyFromConnection:videoConnection
-															   completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) 
-     {
-         if (imageDataSampleBuffer != NULL) 
-         {
-             NSData *imageData					= [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-             UIImage *image						= [[UIImage alloc] initWithData:imageData];
+															   completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
+         if (imageDataSampleBuffer != NULL) {
+             NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
+             UIImage *image = [[UIImage alloc] initWithData:imageData];
 
              CGSize imageSize = [[UIScreen mainScreen] bounds].size;
              UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
              
-             CGContextRef context				= UIGraphicsGetCurrentContext();
+             CGContextRef context = UIGraphicsGetCurrentContext();
              UIGraphicsPushContext(context);
              [image drawInRect:CGRectMake(0, 0, imageSize.width, imageSize.height)];
              UIGraphicsPopContext();
@@ -217,25 +218,21 @@
                  [self renderView:view inContext:context];
              }
              
-             UIImage *screenshot					= UIGraphicsGetImageFromCurrentImageContext();
-             self.screenshotImage                   = screenshot;
+             UIImage *screenshot = UIGraphicsGetImageFromCurrentImageContext();
+             self.screenshotImage = screenshot;
                           
              UIGraphicsEndImageContext();
              
              [self savePhoto:screenshotImage];
              
-             ALAssetsLibrary *library			= [[ALAssetsLibrary alloc] init];
+             ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
              
              [library writeImageToSavedPhotosAlbum:[screenshot CGImage]
                                        orientation:ALAssetOrientationUp
-                                   completionBlock:^(NSURL *assetURL, NSError *error)
-              {
-                  if (error) 
-                  {
+                                   completionBlock:^(NSURL *assetURL, NSError *error){
+                  if (error) {
                       if ([self respondsToSelector:@selector(captureStillImageFailedWithError:)]) 
-                      {
                           [self captureStillImageFailedWithError:error];
-                      }                                                                                               
                   }
               }];
              
@@ -243,14 +240,11 @@
              
              [image release];
          } 
-         else if (error) 
-         {
+         else if (error) {
              NSLog(@"Oops!");
              if ([self respondsToSelector:@selector(captureStillImageFailedWithError:)]) 
-             {
                  [self captureStillImageFailedWithError:error];
-             }
-         }
+        }
      }];
 
 }
@@ -266,16 +260,11 @@
     CGContextRestoreGState(context);
 }
 
-- (AVCaptureConnection *)connectionWithMediaType:(NSString *)mediaType fromConnections:(NSArray *)connections
-{
-	for ( AVCaptureConnection *connection in connections ) 
-	{
-		for ( AVCaptureInputPort *port in [connection inputPorts] ) 
-		{
+- (AVCaptureConnection *)connectionWithMediaType:(NSString *)mediaType fromConnections:(NSArray *)connections {
+	for ( AVCaptureConnection *connection in connections ) {
+		for ( AVCaptureInputPort *port in [connection inputPorts] ) {
 			if ( [[port mediaType] isEqual:mediaType] ) 
-			{
 				return [[connection retain] autorelease];
-			}
 		}
 	}
 	return nil;
@@ -284,9 +273,8 @@
 #pragma mark -
 #pragma mark Error Handling Methods
 
-- (void) captureStillImageFailedWithError:(NSError *)error
-{
-    UIAlertView *alertView						= [[UIAlertView alloc] initWithTitle:@"Still Image Capture Failure"
+- (void) captureStillImageFailedWithError:(NSError *)error {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Still Image Capture Failure"
 															 message:[error localizedDescription]
 															delegate:nil
 												   cancelButtonTitle:@"Okay"
@@ -297,10 +285,9 @@
 
 
 
-- (void) cannotWriteToAssetLibrary
-{
-    UIAlertView *alertView						= [[UIAlertView alloc] initWithTitle:@"Incompatible with Asset Library"
-															 message:@"The captured file cannot be written to the asset library. It is likely an audio-only file."
+- (void) cannotWriteToAssetLibrary {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Incompatible with Asset Library"
+															 message:@"The captured file cannot be written to the library."
 															delegate:nil
 												   cancelButtonTitle:@"Okay"
 												   otherButtonTitles:nil];
@@ -315,12 +302,12 @@
 	didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation {
     NSTimeInterval age = [newLocation.timestamp timeIntervalSinceNow];
-    if(age < 60.0 &&![HoodStatsAppDelegate dataRetrieved]) {
+    if(abs(age) < 60.0 && !dataRetrieved) {
+        NSLog(@"updated");
         [self setCurrentLocation:newLocation];
         [data setArray:[self getData:newLocation]];
-        [HoodStatsAppDelegate setDataRetrieved:YES];
+        dataRetrieved = YES;
     }
-
 }
 
 #pragma mark memory management

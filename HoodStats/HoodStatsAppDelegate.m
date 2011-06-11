@@ -20,20 +20,13 @@
 
 @synthesize persistentStoreCoordinator=__persistentStoreCoordinator;
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     return YES;
 }
 
-+(BOOL)dataRetrieved {
-    return dataRetrieved;
-}
 
-+(void)setDataRetrieved:(BOOL)dataIsRetrieved {
-    dataRetrieved = dataIsRetrieved;
-}
 
 +(NSMutableDictionary *)imageDictionary {
     return imageDictionary;
