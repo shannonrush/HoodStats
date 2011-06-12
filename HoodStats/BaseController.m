@@ -118,6 +118,10 @@
     NSArray *objects = [context executeFetchRequest:request error:&error];
     [request release];
     if ([objects count]>0) {
+        [[objects objectAtIndex:0]setValue:[NSDate date] forKey:@"timestamp"];
+        if (![context save:&error]) {
+            NSLog(@"Couldn't save: %@", [error localizedDescription]);
+        }
         return [objects objectAtIndex:0];
     } else {
         NSManagedObject *locationObject = [NSEntityDescription
@@ -126,10 +130,8 @@
         [locationObject setValue:city forKey:@"city"];
         [locationObject setValue:state forKey:@"state"];
         [locationObject setValue:[NSDate date] forKey:@"timestamp"];
-        NSError *error;
         if (![context save:&error]) {
             NSLog(@"Couldn't save: %@", [error localizedDescription]);
-            return;
         }
         return locationObject;
     }

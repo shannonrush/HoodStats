@@ -28,16 +28,12 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-	if (!locationManager) {
+	if (!locationManager) 
 		locationManager = [[CLLocationManager alloc] init];
-	}	
-    [[UIAccelerometer sharedAccelerometer] setDelegate:self];
     locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     [locationManager setDelegate:self];
     [locationManager startUpdatingLocation];
     [[self captureSession] startRunning];
-    
 }
 
 -(void)initVideo {
@@ -87,8 +83,6 @@
     loadingImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"loading.png"]];
     [[self view] addSubview:loadingImage];
     [self animateScanner];
-    [scanningImage release];
-    [loadingImage release];
 }
 
 -(void)animateScanner {
@@ -96,19 +90,15 @@
         CGRect newFrame = scanningImage.frame;
         newFrame.origin.y += 350.0;
         scanningImage.frame = newFrame;
-    }
-                     completion:^ (BOOL finished) {
-                         if (finished) {
-                             scanningImage.alpha = 0.0;
-                             [scanningImage removeFromSuperview];
-                             if ([data count]==0) {
-                                 sleep(0.01);
-                             }
-                             [self performSelector:@selector(setupUI) withObject:nil afterDelay:0.01];
-                             [self performSelector:@selector(addButtons) withObject:nil afterDelay:0.01];
-                             [loadingImage removeFromSuperview];
-                         }
-                     }];
+    } completion:^ (BOOL finished) {
+        [scanningImage removeFromSuperview];
+        [loadingImage removeFromSuperview];
+        while ([data count]==0) {
+            NSLog(@"wait");
+        }
+        [self performSelector:@selector(setupUI) withObject:nil afterDelay:0.01];
+        [self performSelector:@selector(addButtons) withObject:nil afterDelay:0.01];}
+     ];
 }
 
 -(void)addButtons {
@@ -117,6 +107,7 @@
     [infoButton setBackgroundImage:infoImage forState:UIControlStateNormal];
     infoButton.frame = CGRectMake(265, 395, 45, 45);
     [infoButton addTarget:self action:@selector(loadInfoScreen) forControlEvents:UIControlEventTouchUpInside];
+    infoButton.tag = 1;
     [[self view] addSubview:infoButton];
     
     UIImage *cameraImage = [UIImage imageNamed:@"camera.png"];
@@ -124,6 +115,7 @@
     [cameraButton setBackgroundImage:cameraImage forState:UIControlStateNormal];
     cameraButton.frame = CGRectMake(15, 395, 45, 45);
     [cameraButton addTarget:self action:@selector(takePhoto) forControlEvents:UIControlEventTouchUpInside];
+    cameraButton.tag = 1;
     [[self view] addSubview:cameraButton];
 }
 
@@ -215,7 +207,8 @@
              UIGraphicsPopContext();
              
              for (UIView *view in [self.view subviews]) {
-                 [self renderView:view inContext:context];
+                 if (view.tag != 1) 
+                     [self renderView:view inContext:context];
              }
              
              UIImage *screenshot = UIGraphicsGetImageFromCurrentImageContext();

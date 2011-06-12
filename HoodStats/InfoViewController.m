@@ -15,10 +15,23 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    locations = [[NSArray alloc]initWithArray:[self locations]];
+    [self initLocations];
     infoTable.backgroundColor = [UIColor clearColor];
     infoTable.backgroundView = nil;
     infoTable.separatorColor = [UIColor clearColor];
+}
+
+
+-(void)initLocations {
+    locations = [[NSMutableArray alloc]init];
+    for (NSManagedObject *location in [self locations]) {
+        NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:[self locationString:location],@"title",
+                              [NSMutableArray arrayWithArray:[[location valueForKey:@"historyItems"]allObjects]],@"historyItems",
+                              [location valueForKey:@"Photos"],@"photos",
+                              location,@"locationObject",
+                              nil];
+        [locations addObject:data];
+    }
 }
 
 # pragma mark UITableViewDelegate
@@ -37,8 +50,7 @@
     label.backgroundColor = [UIColor clearColor];
     label.textColor = [HoodStatsAppDelegate popColor];
     label.font = [UIFont fontWithName:@"Bellerose" size:28.0];
-    NSManagedObject *sectionLocation = [locations objectAtIndex:section];
-    label.text = [self locationString:sectionLocation];
+    label.text = [[locations objectAtIndex:section]valueForKey:@"title"];
     [sectionView addSubview:label];
     [label release];
     return sectionView;
@@ -46,14 +58,12 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSManagedObject *sectionLocation = [locations objectAtIndex:section];
-    NSSet *historyItems = [sectionLocation valueForKeyPath:@"HistoryItems"];
-    NSSet *photos = [sectionLocation valueForKey:@"Photos"];
-    if ([photos count]>0) {
-        return [historyItems count]+1;
-    } else {
-        return [historyItems count];
-    }
+    NSDictionary *sectionLocation = [locations objectAtIndex:section];
+    NSMutableArray *historyItems = [sectionLocation valueForKey:@"historyItems"];
+    NSSet *photos = [sectionLocation valueForKey:@"photos"];
+    if ([photos count]>0) 
+        [historyItems insertObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Photos",@"label",[NSString stringWithFormat:@"Your photos taken in %@",[sectionLocation valueForKey:@"title"]],@"value",nil]atIndex:0];
+    return [historyItems count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)theTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -63,20 +73,14 @@
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
     }
-    NSManagedObject *sectionLocation = [locations objectAtIndex:indexPath.section];
-    if ([[sectionLocation valueForKey:@"HistoryItems"]count]<=[indexPath row]) {
-        cell.textLabel.text = @"Photos";
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"Your photos taken in %@",[sectionLocation valueForKey:@"city"]];
+    NSDictionary *sectionLocation = [locations objectAtIndex:indexPath.section];
+    NSMutableArray *historyItems = [sectionLocation objectForKey:@"historyItems"];
+    NSManagedObject *item = [historyItems objectAtIndex:[indexPath row]];
+    cell.textLabel.text = [item valueForKey:@"label"];
+    cell.detailTextLabel.text = [item valueForKey:@"value"];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    if ([cell.textLabel.text isEqualToString:@"Photos"]) 
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    } else {
-        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"label" ascending:YES];
-        NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-        [sortDescriptor release];
-        NSArray *historyItems = [[sectionLocation valueForKeyPath:@"HistoryItems"] sortedArrayUsingDescriptors:sortDescriptors];
-        NSManagedObject *item = [historyItems objectAtIndex:[indexPath row]];
-        cell.textLabel.text = [item valueForKey:@"label"];
-        cell.detailTextLabel.text = [item valueForKey:@"value"];
-    }
     UIImage *cellImage = [UIImage imageNamed:@"infoCellBG.png"];
     UIImageView *cellView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 280, 44)];
     cellView.layer.opacity = 0.5;
@@ -91,7 +95,7 @@
     if ([[tableView cellForRowAtIndexPath:indexPath].textLabel.text isEqualToString:@"Photos"]) {
         // load galleryView
         GalleryViewController *gallery = [[GalleryViewController alloc]initWithNibName:@"GalleryViewController" bundle:[NSBundle mainBundle]];
-        gallery.selectedLocation = [locations objectAtIndex:[indexPath section]];
+        gallery.selectedLocation = [[locations objectAtIndex:[indexPath section]]objectForKey:@"locationObject"];
         [self presentModalViewController:gallery animated:YES];
         [gallery release];
     }

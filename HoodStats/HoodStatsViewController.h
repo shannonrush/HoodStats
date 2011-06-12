@@ -35,6 +35,7 @@
     UIView *firstView;
     UIView *lastView;
     
+    
 }
 
 @property(nonatomic, retain)CLLocation *currentLocation;

@@ -10,8 +10,8 @@
 #import "BaseController.h"
 
 @interface InfoViewController : BaseController <UITableViewDelegate> {
-    NSArray *locations;
     IBOutlet UITableView *infoTable;
+    NSMutableArray *locations;
 }
 
 
