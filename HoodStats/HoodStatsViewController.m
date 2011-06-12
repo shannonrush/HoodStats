@@ -103,7 +103,7 @@
 
 -(void)addButtons {
     UIImage *infoImage = [UIImage imageNamed:@"info.png"];
-    UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    infoButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [infoButton setBackgroundImage:infoImage forState:UIControlStateNormal];
     infoButton.frame = CGRectMake(265, 395, 45, 45);
     [infoButton addTarget:self action:@selector(loadInfoScreen) forControlEvents:UIControlEventTouchUpInside];
@@ -111,8 +111,10 @@
     [[self view] addSubview:infoButton];
     
     UIImage *cameraImage = [UIImage imageNamed:@"camera.png"];
-    UIButton *cameraButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    cameraButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [cameraButton setBackgroundImage:cameraImage forState:UIControlStateNormal];
+    [cameraButton setBackgroundImage:[UIImage imageNamed:@"camera_highlight.png"] forState:UIControlStateHighlighted];
+    [cameraButton setBackgroundImage:[UIImage imageNamed:@"camera_highlight.png"] forState:UIControlStateSelected];
     cameraButton.frame = CGRectMake(15, 395, 45, 45);
     [cameraButton addTarget:self action:@selector(takePhoto) forControlEvents:UIControlEventTouchUpInside];
     cameraButton.tag = 1;
@@ -216,6 +218,13 @@
                           
              UIGraphicsEndImageContext();
              
+             UIImageView *screenshotView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 460)];
+             screenshotView.image = screenshot;
+             [self.view addSubview:screenshotView];
+             [UIView animateWithDuration:1.0 delay:0 options:UIViewAnimationCurveLinear animations:^{
+                 screenshotView.frame = CGRectMake(100, 100, 160, 230);
+             }completion:nil];
+             
              [self savePhoto:screenshotImage];
              
              ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
@@ -239,7 +248,6 @@
                  [self captureStillImageFailedWithError:error];
         }
      }];
-
 }
 
 - (void)renderView:(UIView*)view inContext:(CGContextRef)context {

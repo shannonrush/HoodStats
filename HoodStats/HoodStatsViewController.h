@@ -14,6 +14,9 @@
     
     UIImageView *loadingImage;
     UIImageView *scanningImage;
+    
+    UIButton *cameraButton;
+    UIButton *infoButton;
 
     NSMutableArray *data;
     NSMutableArray *bubbleViews;
