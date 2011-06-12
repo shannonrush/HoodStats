@@ -20,8 +20,6 @@
 		C34311A3136B41DE00862240 /* PhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C34311A1136B41DE00862240 /* PhotoViewController.xib */; };
 		C343557D1357DD7300895B9C /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = C343557B1357DD7300895B9C /* settings.png */; };
 		C343557E1357DD7300895B9C /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C343557C1357DD7300895B9C /* settings@2x.png */; };
-		C34355811358C54800895B9C /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = C343557F1358C54800895B9C /* camera.png */; };
-		C34355821358C54800895B9C /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C34355801358C54800895B9C /* camera@2x.png */; };
 		C343558C135A196B00895B9C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C343558B135A196B00895B9C /* QuartzCore.framework */; };
 		C343558E135A2FE900895B9C /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C343558D135A2FE900895B9C /* ImageIO.framework */; };
 		C34D6E03139D6ABF00F4CCAD /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C34D6E02139D6ABF00F4CCAD /* CoreMotion.framework */; };
@@ -63,6 +61,8 @@
 		C3AED3511356708900ECA9C0 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3AED3501356708900ECA9C0 /* CoreMedia.framework */; };
 		C3AED353135670B300ECA9C0 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3AED352135670B300ECA9C0 /* CoreLocation.framework */; };
 		C3AED355135670B800ECA9C0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3AED354135670B800ECA9C0 /* AVFoundation.framework */; };
+		C3E9B77713A454EA003FE9D4 /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = C3E9B77513A454EA003FE9D4 /* camera.png */; };
+		C3E9B77813A454EA003FE9D4 /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3E9B77613A454EA003FE9D4 /* camera@2x.png */; };
 		C3F613A9135A317E0067C9A9 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3F613A8135A317E0067C9A9 /* CoreVideo.framework */; };
 /* End PBXBuildFile section */
 
@@ -81,8 +81,6 @@
 		C34311A1136B41DE00862240 /* PhotoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoViewController.xib; sourceTree = "<group>"; };
 		C343557B1357DD7300895B9C /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
 		C343557C1357DD7300895B9C /* settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings@2x.png"; sourceTree = "<group>"; };
-		C343557F1358C54800895B9C /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
-		C34355801358C54800895B9C /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
 		C343558B135A196B00895B9C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		C343558D135A2FE900895B9C /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		C34D6E02139D6ABF00F4CCAD /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -139,6 +137,8 @@
 		C3AED3501356708900ECA9C0 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		C3AED352135670B300ECA9C0 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		C3AED354135670B800ECA9C0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		C3E9B77513A454EA003FE9D4 /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
+		C3E9B77613A454EA003FE9D4 /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
 		C3F613A8135A317E0067C9A9 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		C3F9DD3813A2A065004A8AE5 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -283,6 +283,8 @@
 		C3AED3431356705300ECA9C0 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				C3E9B77513A454EA003FE9D4 /* camera.png */,
+				C3E9B77613A454EA003FE9D4 /* camera@2x.png */,
 				C3A2DEC91371D2CA003E8E35 /* forward.png */,
 				C3A2DECA1371D2CA003E8E35 /* forward@2x.png */,
 				C3A2DEC51371D2B9003E8E35 /* back.png */,
@@ -297,8 +299,6 @@
 				C30A6855136CFD570061787D /* infoCellBG@2x.png */,
 				C30A684B136CEE570061787D /* navBack.png */,
 				C30A684C136CEE570061787D /* navBack@2x.png */,
-				C343557F1358C54800895B9C /* camera.png */,
-				C34355801358C54800895B9C /* camera@2x.png */,
 				C343557B1357DD7300895B9C /* settings.png */,
 				C343557C1357DD7300895B9C /* settings@2x.png */,
 				C37D38861357131000239810 /* info.png */,
@@ -373,8 +373,6 @@
 				C37D388F135716E000239810 /* InfoViewController.xib in Resources */,
 				C343557D1357DD7300895B9C /* settings.png in Resources */,
 				C343557E1357DD7300895B9C /* settings@2x.png in Resources */,
-				C34355811358C54800895B9C /* camera.png in Resources */,
-				C34355821358C54800895B9C /* camera@2x.png in Resources */,
 				C358D3A61363AE3A007B7A7A /* GalleryViewController.xib in Resources */,
 				C34311A3136B41DE00862240 /* PhotoViewController.xib in Resources */,
 				C30A684D136CEE570061787D /* navBack.png in Resources */,
@@ -392,6 +390,8 @@
 				C3A2DEC81371D2B9003E8E35 /* back@2x.png in Resources */,
 				C3A2DECB1371D2CA003E8E35 /* forward.png in Resources */,
 				C3A2DECC1371D2CA003E8E35 /* forward@2x.png in Resources */,
+				C3E9B77713A454EA003FE9D4 /* camera.png in Resources */,
+				C3E9B77813A454EA003FE9D4 /* camera@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
