@@ -36,6 +36,11 @@
     [[self captureSession] startRunning];
 }
 
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    cameraActivity.hidden = YES;
+}
+
 -(void)initVideo {
     // device
     AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -94,7 +99,7 @@
         [scanningImage removeFromSuperview];
         [loadingImage removeFromSuperview];
         while ([data count]==0) {
-            NSLog(@"wait");
+            NSLog(@"wait now");
         }
         [self performSelector:@selector(setupUI) withObject:nil afterDelay:0.01];
         [self performSelector:@selector(addButtons) withObject:nil afterDelay:0.01];}
@@ -108,7 +113,7 @@
     infoButton.frame = CGRectMake(265, 395, 45, 45);
     [infoButton addTarget:self action:@selector(loadInfoScreen) forControlEvents:UIControlEventTouchUpInside];
     infoButton.tag = 1;
-    [[self view] addSubview:infoButton];
+    [self.view addSubview:infoButton];
     
     UIImage *cameraImage = [UIImage imageNamed:@"camera.png"];
     cameraButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -118,7 +123,14 @@
     cameraButton.frame = CGRectMake(15, 395, 45, 45);
     [cameraButton addTarget:self action:@selector(takePhoto) forControlEvents:UIControlEventTouchUpInside];
     cameraButton.tag = 1;
-    [[self view] addSubview:cameraButton];
+    [self.view addSubview:cameraButton];
+    
+    cameraActivity = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    cameraActivity.center = cameraButton.center;
+    cameraActivity.hidden = YES;
+    cameraActivity.tag = 1;
+    [self.view addSubview:cameraActivity];
+    
 }
 
 -(void)setupUI {
@@ -190,6 +202,8 @@
 }
 
 -(void)takePhoto {
+    [cameraActivity startAnimating];
+    cameraActivity.hidden = NO;
     AVCaptureConnection *videoConnection = [self connectionWithMediaType:AVMediaTypeVideo fromConnections:[self.captureOutput connections]];
     if ([videoConnection isVideoOrientationSupported]) 
 		[videoConnection setVideoOrientation:[[UIDevice currentDevice] orientation]]; 
@@ -218,12 +232,19 @@
                           
              UIGraphicsEndImageContext();
              
-             UIImageView *screenshotView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 460)];
+             UIImageView *screenshotView = [[UIImageView alloc]initWithFrame:CGRectMake(40, 57, 240, 345)];
              screenshotView.image = screenshot;
              [self.view addSubview:screenshotView];
              [UIView animateWithDuration:1.0 delay:0 options:UIViewAnimationCurveLinear animations:^{
-                 screenshotView.frame = CGRectMake(100, 100, 160, 230);
-             }completion:nil];
+                 screenshotView.frame = CGRectMake(260, 225, 40, 57);
+             }completion:^(BOOL finished) {
+                 [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationCurveLinear animations:^{
+                     screenshotView.frame = CGRectMake(infoButton.center.x, infoButton.center.y, 0, 0);
+                 } completion:^(BOOL finished) {
+                     [cameraButton setBackgroundImage:[UIImage imageNamed:@"camera.png"] forState:UIControlStateNormal];
+                     cameraActivity.hidden = YES;
+                 }];
+             }];
              
              [self savePhoto:screenshotImage];
              

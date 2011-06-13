@@ -12,9 +12,11 @@
 @interface InfoViewController : BaseController <UITableViewDelegate> {
     IBOutlet UITableView *infoTable;
     NSMutableArray *locations;
+    IBOutlet UILabel *waitLabel;
 }
 
 
 -(IBAction)loadMainScreen;
+-(void)initLocations;
 
 @end

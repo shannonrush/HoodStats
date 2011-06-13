@@ -19,16 +19,17 @@
     infoTable.backgroundColor = [UIColor clearColor];
     infoTable.backgroundView = nil;
     infoTable.separatorColor = [UIColor clearColor];
+    waitLabel.font = [UIFont fontWithName:@"Bellerose" size:18.0];
 }
 
 
 -(void)initLocations {
     locations = [[NSMutableArray alloc]init];
-    for (NSManagedObject *location in [self locations]) {
-        NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:[self locationString:location],@"title",
-                              [NSMutableArray arrayWithArray:[[location valueForKey:@"historyItems"]allObjects]],@"historyItems",
-                              [location valueForKey:@"Photos"],@"photos",
-                              location,@"locationObject",
+    for (NSManagedObject *theLocation in [self locations]) {
+        NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:[self locationString:theLocation],@"title",
+                              [NSMutableArray arrayWithArray:[[theLocation valueForKey:@"historyItems"]allObjects]],@"historyItems",
+                              [theLocation valueForKey:@"Photos"],@"photos",
+                              theLocation,@"locationObject",
                               nil];
         [locations addObject:data];
     }
@@ -61,7 +62,7 @@
     NSDictionary *sectionLocation = [locations objectAtIndex:section];
     NSMutableArray *historyItems = [sectionLocation valueForKey:@"historyItems"];
     NSSet *photos = [sectionLocation valueForKey:@"photos"];
-    if ([photos count]>0) 
+    if ([photos count]>0)
         [historyItems insertObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Photos",@"label",[NSString stringWithFormat:@"Your photos taken in %@",[sectionLocation valueForKey:@"title"]],@"value",nil]atIndex:0];
     return [historyItems count];
 }
@@ -93,6 +94,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([[tableView cellForRowAtIndexPath:indexPath].textLabel.text isEqualToString:@"Photos"]) {
+        while (![HoodStatsAppDelegate imageDictionary]) {
+            waitLabel.hidden = NO;
+        }
+        waitLabel.hidden = YES;
         // load galleryView
         GalleryViewController *gallery = [[GalleryViewController alloc]initWithNibName:@"GalleryViewController" bundle:[NSBundle mainBundle]];
         gallery.selectedLocation = [[locations objectAtIndex:[indexPath section]]objectForKey:@"locationObject"];

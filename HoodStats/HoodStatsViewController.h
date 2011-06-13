@@ -16,6 +16,7 @@
     UIImageView *scanningImage;
     
     UIButton *cameraButton;
+    UIActivityIndicatorView *cameraActivity;
     UIButton *infoButton;
 
     NSMutableArray *data;

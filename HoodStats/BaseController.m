@@ -25,17 +25,7 @@
     }
     
     location = [self location:locCity withState:locState];
-    
-    // remove existing historyItems for location if any
-    NSSet *historyItems = [location valueForKeyPath:@"HistoryItems"];
-    if ([historyItems count]>0) {
-        HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        NSManagedObjectContext *context = [appDelegate managedObjectContext];
-        for (NSManagedObject *item in historyItems) {
-            [context deleteObject:item];
-        }
-    }
-    
+        
     // get data from Zillow
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.zillow.com/webservice/GetDemographics.htm?zws-id=X1-ZWz1bvq9sepl3f_90hcq&city=%@&state=%@",locCity,locState]];
     CXMLDocument *xml = [[[CXMLDocument alloc] initWithContentsOfURL:url options:0 error:nil] autorelease];
@@ -118,6 +108,14 @@
     NSArray *objects = [context executeFetchRequest:request error:&error];
     [request release];
     if ([objects count]>0) {
+        // remove existing historyItems for location if any
+        NSSet *historyItems = [[objects objectAtIndex:0] valueForKeyPath:@"HistoryItems"];
+        if ([historyItems count]>0) {
+            for (NSManagedObject *item in historyItems) {
+                [context deleteObject:item];
+            }
+        }
+
         [[objects objectAtIndex:0]setValue:[NSDate date] forKey:@"timestamp"];
         if (![context save:&error]) {
             NSLog(@"Couldn't save: %@", [error localizedDescription]);
