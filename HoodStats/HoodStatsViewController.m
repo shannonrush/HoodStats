@@ -16,30 +16,29 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    if (![HoodStatsAppDelegate imageDictionary]) 
-        [self performSelectorInBackground:@selector(initImages) withObject:nil];
-
-    data = [[NSMutableArray alloc]init];
-    [self initVideo];
-    [self addLoadingLayer];
-    dataRetrieved = NO;
-    bubbleViews = [[NSMutableArray alloc]init];
+    if (!dataRetrieved) {
+        if (![HoodStatsAppDelegate imageDictionary]) 
+            [self performSelectorInBackground:@selector(initImages) withObject:nil];
+        
+        data = [[NSMutableArray alloc]init];
+        [self initVideo];
+        [self addLoadingLayer];
+        bubbleViews = [[NSMutableArray alloc]init];
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-	if (!locationManager) 
-		locationManager = [[CLLocationManager alloc] init];
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    [locationManager setDelegate:self];
-    [locationManager startUpdatingLocation];
-    [[self captureSession] startRunning];
+    if (!dataRetrieved) {
+        if (!locationManager) 
+            locationManager = [[CLLocationManager alloc] init];
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        [locationManager setDelegate:self];
+        [locationManager startUpdatingLocation];
+        [[self captureSession] startRunning];
+    }
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    cameraActivity.hidden = YES;
-}
 
 -(void)initVideo {
     // device
@@ -127,7 +126,7 @@
     
     cameraActivity = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     cameraActivity.center = cameraButton.center;
-    cameraActivity.hidden = YES;
+    cameraActivity.hidesWhenStopped = YES;
     cameraActivity.tag = 1;
     [self.view addSubview:cameraActivity];
     
@@ -203,6 +202,7 @@
 
 -(void)takePhoto {
     [cameraActivity startAnimating];
+    NSLog(@"showing camera activity");
     cameraActivity.hidden = NO;
     AVCaptureConnection *videoConnection = [self connectionWithMediaType:AVMediaTypeVideo fromConnections:[self.captureOutput connections]];
     if ([videoConnection isVideoOrientationSupported]) 
@@ -242,10 +242,10 @@
                      screenshotView.frame = CGRectMake(infoButton.center.x, infoButton.center.y, 0, 0);
                  } completion:^(BOOL finished) {
                      [cameraButton setBackgroundImage:[UIImage imageNamed:@"camera.png"] forState:UIControlStateNormal];
-                     cameraActivity.hidden = YES;
+                     [cameraActivity stopAnimating];
                  }];
              }];
-             
+
              [self savePhoto:screenshotImage];
              
              ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];

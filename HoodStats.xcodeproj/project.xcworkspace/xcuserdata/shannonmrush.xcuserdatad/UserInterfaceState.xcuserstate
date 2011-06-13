@@ -2391,7 +2391,7 @@
 			<key>NS.string</key>
 			<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/icon.png</string>
 		</dict>
-		<real>329623494.63807797</real>
+		<real>329683401.55338401</real>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -3835,9 +3835,9 @@
 		<string>PrimaryDocumentVisibleCharacterRange</string>
 		<string>HideAllIssues</string>
 		<string>PrimaryDocumentSelectedCharacterRange</string>
-		<real>329623197.424806</real>
-		<string>{0, 1161}</string>
-		<string>{558, 0}</string>
+		<real>329683262.15271598</real>
+		<string>{4260, 931}</string>
+		<string>{4743, 0}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -4502,9 +4502,9 @@
 				</dict>
 			</array>
 		</dict>
-		<real>329623494.63802099</real>
-		<string>{145, 1174}</string>
-		<string>{412, 0}</string>
+		<real>329683401.55321097</real>
+		<string>{9146, 1987}</string>
+		<string>{10802, 0}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -4566,19 +4566,19 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>297</integer>
+					<integer>321</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>299</integer>
+					<integer>323</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>298</integer>
+					<integer>322</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>300</integer>
+					<integer>324</integer>
 				</dict>
 			</array>
 			<key>NS.objects</key>
@@ -4625,8 +4625,8 @@
     s = 0;
 }</string>
 		</dict>
-		<real>329500050.65706599</real>
-		<string>{6396, 1672}</string>
+		<real>329683266.291969</real>
+		<string>{3281, 1415}</string>
 		<string>{579, 0}</string>
 		<dict>
 			<key>$class</key>
@@ -7816,7 +7816,7 @@
 				<integer>633</integer>
 			</dict>
 			<key>NS.time</key>
-			<real>329623493.34144902</real>
+			<real>329683400.743343</real>
 		</dict>
 		<dict>
 			<key>$classes</key>
@@ -7827,7 +7827,7 @@
 			<key>$classname</key>
 			<string>NSDate</string>
 		</dict>
-		<string>Today at 8:04 PM</string>
+		<string>Today at 12:43 PM</string>
 		<integer>106</integer>
 		<string>HoodStats</string>
 		<dict>
@@ -7915,7 +7915,7 @@
 				<integer>641</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/PhotoViewController.m</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/HoodStatsAppDelegate.m</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -7933,7 +7933,7 @@
 				<integer>643</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/InfoViewController.xib</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/InfoViewController.m</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -7951,7 +7951,7 @@
 				<integer>645</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/InfoViewController.m</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/PhotoViewController.m</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -7969,7 +7969,7 @@
 				<integer>647</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/InfoViewController.h</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/InfoViewController.xib</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -7987,7 +7987,7 @@
 				<integer>649</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/GalleryViewController.m</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/InfoViewController.h</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -8005,7 +8005,7 @@
 				<integer>651</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/BaseController.m</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/GalleryViewController.m</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -8023,7 +8023,7 @@
 				<integer>653</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/BaseController.h</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/BaseController.m</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -8041,7 +8041,7 @@
 				<integer>655</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/HoodStatsViewController.h</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/BaseController.h</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -8059,7 +8059,7 @@
 				<integer>657</integer>
 			</dict>
 		</dict>
-		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/HoodStats-Info.plist</string>
+		<string>file://localhost/Users/shannonmrush/git2/HoodStats/HoodStats/HoodStatsViewController.h</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -13150,7 +13150,7 @@
 				<integer>1037</integer>
 			</dict>
 		</dict>
-		<real>329623494.64016402</real>
+		<real>329683401.55595398</real>
 		<string>IDEQuickLookEditor.Editor</string>
 		<dict>
 			<key>$class</key>
@@ -20353,7 +20353,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>23</integer>
+					<integer>303</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -21095,7 +21095,7 @@
 				</dict>
 			</array>
 		</dict>
-		<real>880</real>
+		<real>1140</real>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -21514,10 +21514,10 @@
 				</dict>
 			</array>
 		</dict>
-		<real>329623494.63857901</real>
-		<string>{145, 1174}</string>
-		<string>{412, 0}</string>
-		<string>-viewDidLoad</string>
+		<real>329683401.55401099</real>
+		<string>{9146, 1987}</string>
+		<string>{10802, 0}</string>
+		<string>-takePhoto</string>
 		<string>Xcode.IDEKit.EditorDocument.SourceCode</string>
 		<dict>
 			<key>$class</key>
@@ -21551,7 +21551,7 @@
 				</dict>
 			</array>
 		</dict>
-		<string>{{0, 0}, {880, 516}}</string>
+		<string>{{0, 0}, {1140, 516}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -21732,7 +21732,7 @@
 				</dict>
 			</array>
 		</dict>
-		<real>581</real>
+		<real>841</real>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -21831,7 +21831,7 @@
 				</dict>
 			</array>
 		</dict>
-		<real>581</real>
+		<real>841</real>
 		<dict>
 			<key>$class</key>
 			<dict>
