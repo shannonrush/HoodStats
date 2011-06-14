@@ -154,7 +154,9 @@
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
     NSManagedObject *photoObject = [NSEntityDescription insertNewObjectForEntityForName:@"Photo" inManagedObjectContext:context];
     NSData *imageData = UIImagePNGRepresentation(screenshot);
+    NSData *thumbnailData = UIImagePNGRepresentation([self thumbnail:screenshot]);
     [photoObject setValue:imageData forKey:@"image"];
+    [photoObject setValue:thumbnailData forKey:@"thumbnail"];
     [photoObject setValue:location forKey:@"location"];
     [photoObject setValue:[NSDate date] forKey:@"timestamp"];
     NSError *error;
@@ -237,7 +239,7 @@
                 [[imageDict objectForKey:locationString]setObject:[NSMutableArray array] forKey:dateString];
             }
             UIImage *image = [UIImage imageWithData:[photo valueForKey:@"image"]];
-            UIImage *thumbnail = [self thumbnail:image];
+            UIImage *thumbnail = [UIImage imageWithData:[photo valueForKey:@"thumbnail"]];
             NSDictionary *photoDictionary = [NSDictionary dictionaryWithObjectsAndKeys:image,@"image",thumbnail,@"thumbnail",nil];
             [[[imageDict objectForKey:locationString]objectForKey:dateString]addObject:photoDictionary];
         }

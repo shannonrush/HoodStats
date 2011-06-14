@@ -202,8 +202,6 @@
 
 -(void)takePhoto {
     [cameraActivity startAnimating];
-    NSLog(@"showing camera activity");
-    cameraActivity.hidden = NO;
     AVCaptureConnection *videoConnection = [self connectionWithMediaType:AVMediaTypeVideo fromConnections:[self.captureOutput connections]];
     if ([videoConnection isVideoOrientationSupported]) 
 		[videoConnection setVideoOrientation:[[UIDevice currentDevice] orientation]]; 
