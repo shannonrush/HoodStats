@@ -165,7 +165,7 @@
 }
 
 - (void)addOverlay {
-    float x = -250;
+    float x = -880;
     for (NSDictionary *stat in data) {
         if ([[stat allKeys]containsObject:@"label"]&&[[stat allKeys]containsObject:@"value"]) {
             UILabel *markerLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, 200, 220, 55)];
