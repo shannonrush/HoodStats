@@ -197,7 +197,7 @@
 
 -(NSString *)dateString:(NSDate *)date {
     NSDateFormatter *dateFormat =[[NSDateFormatter alloc] init];
-    [dateFormat setDateFormat:@"MMMM e, YYYY"]; // May 8, 1977
+    [dateFormat setDateStyle:NSDateFormatterLongStyle]; // May 8, 1977
     NSString *dateString = [dateFormat stringFromDate:date];   
     [dateFormat release];
     return dateString;
