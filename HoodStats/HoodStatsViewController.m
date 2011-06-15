@@ -165,9 +165,10 @@
 }
 
 - (void)addOverlay {
+    float x = -250;
     for (NSDictionary *stat in data) {
         if ([[stat allKeys]containsObject:@"label"]&&[[stat allKeys]containsObject:@"value"]) {
-            UILabel *markerLabel = [[UILabel alloc] initWithFrame:CGRectMake(250*([data indexOfObject:stat]-1)+50, 200, 220, 55)];
+            UILabel *markerLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, 200, 220, 55)];
             markerLabel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble.png"]];
             [markerLabel setOpaque:NO];
             markerLabel.adjustsFontSizeToFitWidth = YES;
@@ -178,6 +179,7 @@
             [bubbleViews addObject:markerLabel];
             [self.view addSubview:markerLabel];
             [markerLabel release];
+            x+=300;
         } else if ([[stat allKeys]containsObject:@"city"]) {
             cityLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 100, 100, 100)];
             cityLabel.backgroundColor = [UIColor clearColor];
