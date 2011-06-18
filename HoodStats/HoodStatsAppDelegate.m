@@ -26,14 +26,13 @@
     return YES;
 }
 
-
-
-+(NSMutableDictionary *)imageDictionary {
-    return imageDictionary;
++(NSMutableArray *)imageArray {
+    return imageArray;
 }
 
-+(void)setImageDictionary:(NSMutableDictionary *)dictionary {
-    imageDictionary = dictionary;
++(void)setImageArray:(NSMutableArray *)array {
+    [imageArray release];
+    imageArray = [array retain];
 }
 
 +(UIColor *)popColor {

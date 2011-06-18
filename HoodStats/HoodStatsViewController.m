@@ -16,27 +16,24 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    if (!dataRetrieved) {
-        if (![HoodStatsAppDelegate imageDictionary]) 
-            [self performSelectorInBackground:@selector(initImages) withObject:nil];
-        
-        data = [[NSMutableArray alloc]init];
-        [self initVideo];
-        [self addLoadingLayer];
-        bubbleViews = [[NSMutableArray alloc]init];
-    }
+    if (![HoodStatsAppDelegate imageArray]) 
+        [self performSelectorInBackground:@selector(initImages) withObject:nil];
+    
+    data = [[NSMutableArray alloc]init];
+    [self initVideo];
+    [self addLoadingLayer];
+    bubbleViews = [[NSMutableArray alloc]init];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (!dataRetrieved) {
-        if (!locationManager) 
-            locationManager = [[CLLocationManager alloc] init];
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        [locationManager setDelegate:self];
-        [locationManager startUpdatingLocation];
-        [[self captureSession] startRunning];
-    }
+    animating = YES;
+    if (!locationManager) 
+        locationManager = [[CLLocationManager alloc] init];
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [locationManager setDelegate:self];
+    [locationManager startUpdatingLocation];
+    [[self captureSession] startRunning];
 }
 
 
@@ -151,16 +148,18 @@
 }
 
 -(void)processMotion:(CMDeviceMotion *)motion withError:(NSError *)error {
-    if (!referenceAttitude) {
-        referenceAttitude = [motionManager.deviceMotion.attitude retain];
-    }
-    CMAttitude *currentAttitude = motion.attitude;
-    [currentAttitude multiplyByInverseOfAttitude:referenceAttitude];
-    for (UIView *view in bubbleViews) {
-        view.transform = CGAffineTransformMakeRotation(currentAttitude.yaw);
-        CGPoint viewCenter = view.center;
-        viewCenter.x += currentAttitude.roll * 10;
-        view.center = viewCenter;
+    if (animating) {
+        if (!referenceAttitude) {
+            referenceAttitude = [motionManager.deviceMotion.attitude retain];
+        }
+        CMAttitude *currentAttitude = motion.attitude;
+        [currentAttitude multiplyByInverseOfAttitude:referenceAttitude];
+        for (UIView *view in bubbleViews) {
+            view.transform = CGAffineTransformMakeRotation(currentAttitude.yaw);
+            CGPoint viewCenter = view.center;
+            viewCenter.x += currentAttitude.roll * 10;
+            view.center = viewCenter;
+        }
     }
 }
 
@@ -196,6 +195,7 @@
 
 
 -(void)loadInfoScreen {
+    animating = NO;
     InfoViewController *info = [[InfoViewController alloc]initWithNibName:@"InfoViewController" bundle:[NSBundle mainBundle]];
     info.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     [self presentModalViewController:info animated:YES];

@@ -11,6 +11,7 @@
 
 
 @interface HoodStatsViewController : BaseController <CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate> {
+    BOOL animating;
     
     UIImageView *loadingImage;
     UIImageView *scanningImage;

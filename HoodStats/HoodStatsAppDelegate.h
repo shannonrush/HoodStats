@@ -11,7 +11,7 @@
 
 @class HoodStatsViewController;
 
-NSMutableDictionary *imageDictionary;
+NSMutableArray *imageArray;
 
 UIColor *popColor;
 
@@ -29,8 +29,8 @@ UIColor *popColor;
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 
-+(NSMutableDictionary *)imageDictionary;
-+(void)setImageDictionary:(NSMutableDictionary *)dictionary;
++(NSMutableArray *)imageArray;
++(void)setImageArray:(NSMutableArray *)array;
 +(UIColor *)popColor;
 
 @end

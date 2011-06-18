@@ -98,37 +98,36 @@
 
 -(NSManagedObject *)location:(NSString *)city withState:(NSString *)state {
     HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Location" inManagedObjectContext:context];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Location" inManagedObjectContext:[appDelegate managedObjectContext]];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"(city = %@ and state = %@)", city, state];	
     [request setPredicate:pred];
     NSError *error;
-    NSArray *objects = [context executeFetchRequest:request error:&error];
+    NSArray *objects = [[appDelegate managedObjectContext] executeFetchRequest:request error:&error];
     [request release];
     if ([objects count]>0) {
         // remove existing historyItems for location if any
         NSSet *historyItems = [[objects objectAtIndex:0] valueForKeyPath:@"HistoryItems"];
         if ([historyItems count]>0) {
             for (NSManagedObject *item in historyItems) {
-                [context deleteObject:item];
+                [[appDelegate managedObjectContext] deleteObject:item];
             }
         }
 
         [[objects objectAtIndex:0]setValue:[NSDate date] forKey:@"timestamp"];
-        if (![context save:&error]) {
+        if (![[appDelegate managedObjectContext] save:&error]) {
             NSLog(@"Couldn't save: %@", [error localizedDescription]);
         }
         return [objects objectAtIndex:0];
     } else {
         NSManagedObject *locationObject = [NSEntityDescription
                                            insertNewObjectForEntityForName:@"Location" 
-                                           inManagedObjectContext:context];
+                                           inManagedObjectContext:[appDelegate managedObjectContext]];
         [locationObject setValue:city forKey:@"city"];
         [locationObject setValue:state forKey:@"state"];
         [locationObject setValue:[NSDate date] forKey:@"timestamp"];
-        if (![context save:&error]) {
+        if (![[appDelegate managedObjectContext] save:&error]) {
             NSLog(@"Couldn't save: %@", [error localizedDescription]);
         }
         return locationObject;
@@ -137,13 +136,12 @@
 
 -(void)saveHistoryItem:(NSString *)label withValue:(NSString *)value {
     HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    NSManagedObject *itemObject = [NSEntityDescription insertNewObjectForEntityForName:@"HistoryItem" inManagedObjectContext:context];
+    NSManagedObject *itemObject = [NSEntityDescription insertNewObjectForEntityForName:@"HistoryItem" inManagedObjectContext:[appDelegate managedObjectContext]];
     [itemObject setValue:value forKey:@"value"];
     [itemObject setValue:label forKey:@"label"];
     [itemObject setValue:location forKey:@"location"];
     NSError *error;
-    if (![context save:&error]) {
+    if (![[appDelegate managedObjectContext] save:&error]) {
         NSLog(@"Couldn't save: %@", [error localizedDescription]);
         return;
     }
@@ -151,8 +149,7 @@
 
 -(void)savePhoto:(UIImage *)screenshot {
     HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    NSManagedObject *photoObject = [NSEntityDescription insertNewObjectForEntityForName:@"Photo" inManagedObjectContext:context];
+    NSManagedObject *photoObject = [NSEntityDescription insertNewObjectForEntityForName:@"Photo" inManagedObjectContext:[appDelegate managedObjectContext]];
     NSData *imageData = UIImagePNGRepresentation(screenshot);
     NSData *thumbnailData = UIImagePNGRepresentation([self thumbnail:screenshot]);
     [photoObject setValue:imageData forKey:@"image"];
@@ -160,34 +157,52 @@
     [photoObject setValue:location forKey:@"location"];
     [photoObject setValue:[NSDate date] forKey:@"timestamp"];
     NSError *error;
-    if (![context save:&error]) {
+    if (![[appDelegate managedObjectContext] save:&error]) {
         NSLog(@"Couldn't save: %@", [error localizedDescription]);
         return;
     } else {
-        [self performSelectorInBackground:@selector(addPhotoToImageDictionary:) withObject:screenshot];
+        [self performSelectorInBackground:@selector(addPhotoToImageArray:) withObject:screenshot];
     }
 }
 
--(void)addPhotoToImageDictionary:(UIImage *)screenshot {
+-(void)addPhotoToImageArray:(UIImage *)screenshot {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
     [runLoop run];
-    while (![HoodStatsAppDelegate imageDictionary]) {
+    while (![HoodStatsAppDelegate imageArray]) {
         NSLog(@"Trying to save, waiting...");
     }
     NSString *locationString = [self locationString:location];
-    if (![[[HoodStatsAppDelegate imageDictionary]allKeys]containsObject:locationString]) {
-        [[HoodStatsAppDelegate imageDictionary] setObject:[NSMutableDictionary dictionary] forKey:locationString];
-    }
-    NSMutableDictionary *locationDictionary = [[HoodStatsAppDelegate imageDictionary] objectForKey:locationString];
-    NSString *dateString = [self dateString:[NSDate date]];
-    if (![[locationDictionary allKeys]containsObject:dateString]) {
-        [locationDictionary setObject:[NSMutableArray array] forKey:dateString];
-    }
-    NSMutableArray *dateArray = [locationDictionary objectForKey:dateString];
     UIImage *thumbnail = [self thumbnail:screenshot];
     NSDictionary *photoDictionary = [NSDictionary dictionaryWithObjectsAndKeys:screenshot,@"image",thumbnail,@"thumbnail",nil];
-    [dateArray addObject:photoDictionary];
+    NSString *dateString = [self dateString:[NSDate date]];
+
+    BOOL locationExists;
+    for (NSDictionary *locDict in [HoodStatsAppDelegate imageArray]) {
+        if ([[locDict allKeys] containsObject:locationString]) {
+            locationExists = YES;
+            NSPredicate *pred = [NSPredicate predicateWithFormat:@"%K==%@",@"date",dateString];
+            NSArray *results = [[locDict objectForKey:locationString] filteredArrayUsingPredicate:pred];
+            if ([results count]==0) {
+                // add a dictionary with keys date (object dateString) and photos (object array with photoDictionary) 
+                NSMutableDictionary *dateDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:dateString,@"date", 
+                                                 [NSMutableArray arrayWithObject:photoDictionary],@"photos",
+                                                 nil];
+                // add date dictionary to location Array
+                [[locDict objectForKey:locationString] insertObject:dateDict atIndex:0];
+            } else {
+                [[[results objectAtIndex:0]objectForKey:@"photos"]insertObject:photoDictionary atIndex:0];
+            }
+        }
+    }
+    if (!locationExists) {
+        // create a location dictionary with key location string and date array with object dictionary with keys date (object dateString) and photos (object array with photoDictionary)
+        NSMutableArray *photoArray = [NSMutableArray arrayWithObject:photoDictionary];
+        NSMutableDictionary *dateDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:dateString,@"date",
+                                          photoArray,@"photos",nil];
+        NSMutableArray *dateArray = [NSMutableArray arrayWithObject:dateDict];
+        [[HoodStatsAppDelegate imageArray]addObject:[NSMutableDictionary dictionaryWithObject:dateArray forKey:locationString]];
+    }
     [pool release];
 }
 
@@ -206,7 +221,7 @@
 -(NSArray *)locations {
     HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Location" inManagedObjectContext:context];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Location" inManagedObjectContext:[appDelegate managedObjectContext]];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSSortDescriptor *dateSort = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:NO];
     [request setEntity:entityDesc];
@@ -219,37 +234,33 @@
 }
 
 -(void)initImages {
-    NSLog(@"IN INIT IMAGES");
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 	[runLoop run];
-    NSMutableDictionary *imageDict = [NSMutableDictionary dictionary];
+    NSMutableArray *imageArray = [NSMutableArray array];
     for (NSManagedObject *selectedLocation in [self locations]) {
         NSString *locationString = [self locationString:selectedLocation];
-        if (![[imageDict allKeys]containsObject:locationString]) {
-            [imageDict setObject:[NSMutableDictionary dictionary] forKey:locationString];
-        }
+        NSMutableDictionary *locDict = [NSMutableDictionary dictionaryWithObject:[NSMutableArray array] forKey:locationString];
         NSMutableArray *locationPhotos = [NSMutableArray arrayWithArray:[[selectedLocation valueForKey:@"Photos"] allObjects]];
-        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:YES];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:NO];
         [locationPhotos sortUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
         [sortDescriptor release];
         for (NSManagedObject *photo in locationPhotos) {
-            NSString *dateString = [self dateString:[photo valueForKey:@"timestamp"]];
-            if (![[[imageDict objectForKey:locationString] allKeys]containsObject:dateString]) {
-                [[imageDict objectForKey:locationString]setObject:[NSMutableArray array] forKey:dateString];
+            NSString *dateString = [[self dateString:[photo valueForKey:@"timestamp"]]retain];
+            NSPredicate *pred = [NSPredicate predicateWithFormat:@"%K == %@",@"date",dateString];
+            NSArray *results = [[locDict objectForKey:locationString]filteredArrayUsingPredicate:pred];
+            if ([results count]==0) {
+                [[locDict objectForKey:locationString]addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:dateString,@"date",[NSMutableArray array],@"photos",nil]];
             }
             UIImage *image = [UIImage imageWithData:[photo valueForKey:@"image"]];
             UIImage *thumbnail = [UIImage imageWithData:[photo valueForKey:@"thumbnail"]];
             NSDictionary *photoDictionary = [NSDictionary dictionaryWithObjectsAndKeys:image,@"image",thumbnail,@"thumbnail",nil];
-            [[[imageDict objectForKey:locationString]objectForKey:dateString]addObject:photoDictionary];
+            NSMutableArray *photoArray = [[[locDict objectForKey:locationString]lastObject]objectForKey:@"photos"];
+            [photoArray addObject:photoDictionary];
         }
+        [imageArray addObject:locDict];
     }
-    [HoodStatsAppDelegate setImageDictionary:[[NSMutableDictionary alloc]initWithDictionary:imageDict]];
-    if ([HoodStatsAppDelegate imageDictionary]) {
-        NSLog(@"Finished creating imageDictionary.  Success!");
-    } else {
-        NSLog(@"Finished but failed");
-    }
+    [HoodStatsAppDelegate setImageArray:imageArray];
     [pool release];
 }
 

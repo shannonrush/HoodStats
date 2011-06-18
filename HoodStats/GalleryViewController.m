@@ -26,33 +26,36 @@
 }
 
 -(void)initGallery {
-    while (![HoodStatsAppDelegate imageDictionary]) {
+    while (![HoodStatsAppDelegate imageArray]) {
         NSLog(@"Waiting");
     }
     float y = 0.0;
     scrollView.contentSize = CGSizeMake(280.0, 0);
     NSString *locationString = [self locationString:selectedLocation];
-    locationDictionary = [[NSDictionary alloc]initWithDictionary:[[HoodStatsAppDelegate imageDictionary]objectForKey:locationString]];
+    for (NSMutableDictionary *locDict in [HoodStatsAppDelegate imageArray]) {
+        if ([[locDict allKeys]containsObject:locationString]) 
+            locationDictionary = [[NSDictionary alloc]initWithDictionary:locDict];
+    }
     locationLabel.font = [UIFont fontWithName:@"Bellerose" size:24.0];
     locationLabel.textColor = [HoodStatsAppDelegate popColor];
     locationLabel.text = [NSString stringWithFormat:@"%@ Photos",locationString];
-    
-    NSArray *dates = [locationDictionary allKeys];
-    for (NSString *date in dates) {
+    NSArray *dates = [locationDictionary objectForKey:[self locationString:selectedLocation]];
+
+    for (NSDictionary *date in dates) {
         // add date label
         float x = 0.0;
 
         UILabel *dateLabel = [[UILabel alloc]initWithFrame:CGRectMake(x, y, 300.0, 30.0)];
         dateLabel.backgroundColor = [UIColor clearColor];
         dateLabel.font = [UIFont fontWithName:@"Bellerose" size:18.0];
-        dateLabel.text = date;
+        dateLabel.text = [date objectForKey:@"date"];
         [self increaseScrollViewHeight:dateLabel.frame.size.height];
         [scrollView addSubview:dateLabel];
         [dateLabel release];
         
         y += 35.0;
         
-        NSArray *images = [locationDictionary objectForKey:date];
+        NSArray *images = [date objectForKey:@"photos"];
         
         for (NSDictionary *imageDict in images) {
             int index = [images indexOfObject:imageDict];
@@ -87,9 +90,9 @@
 }
                             
 -(UIImage *)initialImage:(UIImage *)thumbnail {
-    NSArray *dates = [locationDictionary allKeys];
-    for (NSString *date in dates) {
-        NSArray *images = [locationDictionary objectForKey:date];
+    NSArray *dates = [locationDictionary objectForKey:[self locationString:selectedLocation]];
+    for (NSDictionary *date in dates) {
+        NSArray *images = [date objectForKey:@"photos"];
         for (NSDictionary *imageDict in images) {
             if ([imageDict objectForKey:@"thumbnail"]==thumbnail) {
                 return [imageDict objectForKey:@"image"];
@@ -100,9 +103,9 @@
 
 -(NSMutableArray *)locationImages {
     NSMutableArray *locImages = [NSMutableArray array];
-    NSArray *dates = [locationDictionary allKeys];
-    for (NSString *date in dates) {
-        NSArray *images = [locationDictionary objectForKey:date];
+    NSArray *dates = [locationDictionary objectForKey:[self locationString:selectedLocation]];
+    for (NSDictionary *date in dates) {
+        NSArray *images = [date objectForKey:@"photos"];
         for (NSDictionary *imageDict in images) {
             [locImages addObject:[imageDict objectForKey:@"image"]];
         }

@@ -19,7 +19,6 @@
     infoTable.backgroundColor = [UIColor clearColor];
     infoTable.backgroundView = nil;
     infoTable.separatorColor = [UIColor clearColor];
-    waitLabel.font = [UIFont fontWithName:@"Bellerose" size:18.0];
 }
 
 
@@ -94,10 +93,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([[tableView cellForRowAtIndexPath:indexPath].textLabel.text isEqualToString:@"Photos"]) {
-        while (![HoodStatsAppDelegate imageDictionary]) {
-            waitLabel.hidden = NO;
-        }
-        waitLabel.hidden = YES;
         // load galleryView
         GalleryViewController *gallery = [[GalleryViewController alloc]initWithNibName:@"GalleryViewController" bundle:[NSBundle mainBundle]];
         gallery.selectedLocation = [[locations objectAtIndex:[indexPath section]]objectForKey:@"locationObject"];
