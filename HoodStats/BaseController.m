@@ -98,25 +98,26 @@
 
 -(NSManagedObject *)location:(NSString *)city withState:(NSString *)state {
     HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Location" inManagedObjectContext:[appDelegate managedObjectContext]];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Location" inManagedObjectContext:context];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"(city = %@ and state = %@)", city, state];	
     [request setPredicate:pred];
     NSError *error;
-    NSArray *objects = [[appDelegate managedObjectContext] executeFetchRequest:request error:&error];
+    NSArray *objects = [context executeFetchRequest:request error:&error];
     [request release];
     if ([objects count]>0) {
         // remove existing historyItems for location if any
         NSSet *historyItems = [[objects objectAtIndex:0] valueForKeyPath:@"HistoryItems"];
         if ([historyItems count]>0) {
             for (NSManagedObject *item in historyItems) {
-                [[appDelegate managedObjectContext] deleteObject:item];
+                [[item managedObjectContext] deleteObject:item];
             }
         }
 
         [[objects objectAtIndex:0]setValue:[NSDate date] forKey:@"timestamp"];
-        if (![[appDelegate managedObjectContext] save:&error]) {
+        if (![context save:&error]) {
             NSLog(@"Couldn't save: %@", [error localizedDescription]);
         }
         return [objects objectAtIndex:0];
@@ -127,7 +128,7 @@
         [locationObject setValue:city forKey:@"city"];
         [locationObject setValue:state forKey:@"state"];
         [locationObject setValue:[NSDate date] forKey:@"timestamp"];
-        if (![[appDelegate managedObjectContext] save:&error]) {
+        if (![context save:&error]) {
             NSLog(@"Couldn't save: %@", [error localizedDescription]);
         }
         return locationObject;
@@ -135,21 +136,23 @@
 }
 
 -(void)saveHistoryItem:(NSString *)label withValue:(NSString *)value {
-    HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
-    NSManagedObject *itemObject = [NSEntityDescription insertNewObjectForEntityForName:@"HistoryItem" inManagedObjectContext:[appDelegate managedObjectContext]];
+    HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSManagedObject *itemObject = [NSEntityDescription insertNewObjectForEntityForName:@"HistoryItem" inManagedObjectContext:context];
     [itemObject setValue:value forKey:@"value"];
     [itemObject setValue:label forKey:@"label"];
     [itemObject setValue:location forKey:@"location"];
     NSError *error;
-    if (![[appDelegate managedObjectContext] save:&error]) {
+    if (![context save:&error]) {
         NSLog(@"Couldn't save: %@", [error localizedDescription]);
         return;
     }
 }
 
 -(void)savePhoto:(UIImage *)screenshot {
-    HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
-    NSManagedObject *photoObject = [NSEntityDescription insertNewObjectForEntityForName:@"Photo" inManagedObjectContext:[appDelegate managedObjectContext]];
+    HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSManagedObject *photoObject = [NSEntityDescription insertNewObjectForEntityForName:@"Photo" inManagedObjectContext:context];
     NSData *imageData = UIImagePNGRepresentation(screenshot);
     NSData *thumbnailData = UIImagePNGRepresentation([self thumbnail:screenshot]);
     [photoObject setValue:imageData forKey:@"image"];
@@ -157,7 +160,7 @@
     [photoObject setValue:location forKey:@"location"];
     [photoObject setValue:[NSDate date] forKey:@"timestamp"];
     NSError *error;
-    if (![[appDelegate managedObjectContext] save:&error]) {
+    if (![context save:&error]) {
         NSLog(@"Couldn't save: %@", [error localizedDescription]);
         return;
     } else {
@@ -221,7 +224,7 @@
 -(NSArray *)locations {
     HoodStatsAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Location" inManagedObjectContext:[appDelegate managedObjectContext]];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Location" inManagedObjectContext:context];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSSortDescriptor *dateSort = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:NO];
     [request setEntity:entityDesc];

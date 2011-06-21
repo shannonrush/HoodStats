@@ -87,7 +87,7 @@
 }
 
 -(void)animateScanner {
-    [UIView animateWithDuration:2.5 delay:0 options:UIViewAnimationOptionAutoreverse animations:^{
+    [UIView animateWithDuration:4.0 delay:0 options:UIViewAnimationOptionAutoreverse animations:^{
         CGRect newFrame = scanningImage.frame;
         newFrame.origin.y += 350.0;
         scanningImage.frame = newFrame;

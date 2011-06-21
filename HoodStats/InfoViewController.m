@@ -79,8 +79,11 @@
     cell.textLabel.text = [item valueForKey:@"label"];
     cell.detailTextLabel.text = [item valueForKey:@"value"];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    if ([cell.textLabel.text isEqualToString:@"Photos"]) 
+    if ([cell.textLabel.text isEqualToString:@"Photos"]) {
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    } else {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
     UIImage *cellImage = [UIImage imageNamed:@"infoCellBG.png"];
     UIImageView *cellView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 280, 44)];
     cellView.layer.opacity = 0.5;
